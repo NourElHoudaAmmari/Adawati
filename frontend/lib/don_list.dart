@@ -1,10 +1,8 @@
 
 
-import 'package:adawati/api_service.dart';
 import 'package:adawati/don_item.dart';
 import 'package:adawati/models/don_model.dart';
 import 'package:flutter/material.dart';
-import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 class DonList extends StatefulWidget {
   const DonList({super.key});
@@ -15,7 +13,6 @@ class DonList extends StatefulWidget {
 
 class _DonListState extends State<DonList> {
   List<DonModel> dons=List<DonModel>.empty(growable: true);
-   bool isAPICallProcess =false;
   @override
 
   @override
@@ -80,15 +77,7 @@ borderRadius: BorderRadius.all(
                 itemBuilder: (context, index) {
                   return DonItem(
                     model: dons[index],
-                    onDelete: (DonModel model){
-                      setState(() {
-                        isAPICallProcess= true;
-                      });
-                      APIService.deleteDon(model.id).then(
-                        (response){
-isAPICallProcess= false;
-                        });
-                    },
+                    onDelete: (DonModel model){},
                   );
                 },
               )
@@ -105,26 +94,7 @@ isAPICallProcess= false;
         elevation: 0,
       ),
       backgroundColor: Colors.grey[200],
-      body: ProgressHUD(
-        child: loadDon(),
-        inAsyncCall: isAPICallProcess,
-        opacity: .3,
-        key: UniqueKey(),
-      ),
-    );
-  }
-  Widget loadDon(){
-    return FutureBuilder(
-      future: APIService.getDons(),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<List<DonModel>?> model,
-      ){
-        if(model.hasData){
-          return donList(model.data);
-        }
-        return const Center(child: CircularProgressIndicator());
-      },
+      body: donList(dons),
     );
   }
 }

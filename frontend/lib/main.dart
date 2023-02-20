@@ -21,28 +21,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Adawati',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-       /* theme: ThemeData.dark().copyWith(
+      
+        theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: bgColor,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
             .apply(bodyColor: Colors.white),
         canvasColor: secondaryColor,
-      ),*/
-    /*  home: MultiProvider(
+      ),
+      home: MultiProvider(
         providers: [
           ChangeNotifierProvider(
             create: (context) => cont.MenuController(),
           ),
         ],
-        child: MainScreen(),*/
-        routes: {
-        '/':(context) => const DonList(),
-          '/add-don':(context) => const DonAddEdit(),
-            '/edit-don':(context) => const DonAddEdit(),
-      },
-    
+        child: MainScreen(),
+      ),
     );
   }
 }
+
+
+   /*  routes: {
+        '/':(context) => const DonList(),
+          '/add-don':(context) => const DonAddEdit(),
+            '/edit-don':(context) => const DonAddEdit(),
+      },*/
+      /*theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),*/

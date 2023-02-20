@@ -11,7 +11,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed:(){},
+        onPressed:(){
+          
+        },
         child: Icon(Icons.add),
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
@@ -67,12 +69,12 @@ class HomePage extends StatelessWidget {
               height: 150,
               decoration: BoxDecoration(
                 
-                image: DecorationImage(
+               /* image: DecorationImage(
                   
                   fit:BoxFit.cover,
                   
                   image: NetworkImage('https://i0.wp.com/scolaire.ma/wp-content/uploads/2022/08/Fourniture-Scolaire-a-bas-prix-.png?resize=820%2C520&ssl=1'),
-                  ),
+                  ),*/
                    color: Color.fromARGB(255, 226, 224, 223),
                    
                 borderRadius: BorderRadius.circular(10)),
