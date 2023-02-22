@@ -15,7 +15,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: context.read<cont.MenuController>().scaffoldKey,
-      drawer: SideMenu(),
+      //drawer: SideMenu(),
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

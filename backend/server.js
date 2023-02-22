@@ -17,6 +17,9 @@ app.use('/categories',require('./routes/CategorieRoute'))
 app.use('/niveaux',require('./routes/NiveauRoute'))
 app.use('/etats',require('./routes/EtatRoute'))
 app.use('/matieres',require('./routes/MatiereRoute'))
+app.use('/dons',require('./routes/DonRoute'))
+app.use('/user', require('./routes/userRoute'))
+
 app.use(errorHandler)
 
 app.listen(port,()=> console.log(`Server started on port ${port}`))

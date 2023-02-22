@@ -1,6 +1,6 @@
 
 
-import 'package:adawati/don_item.dart';
+import 'package:adawati/screens/dons/don_item.dart';
 import 'package:adawati/models/don_model.dart';
 import 'package:flutter/material.dart';
 
