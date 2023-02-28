@@ -1,12 +1,13 @@
 const jwt = require("jsonwebtoken")
 const asyncHandler = require("express-async-handler")
 const User = require("../models/UserModel")
-
+const JWT_SECRET = process.env.JWT_SECRET;
 const protect = async (req, res, next) => {
   try {
+    
     let token = req.headers["authorization"].split(" ")[1]
     if (token) {
-
+console.log(token)
       try {
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET)

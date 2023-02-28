@@ -1,8 +1,7 @@
-
-const mongoose = require("mongoose")
-
+const mongoose = require('mongoose')
 const userSchema = mongoose.Schema(
-  {
+
+ {
     name: {
       type: String,
       required: [true, "Please add a name"],
@@ -11,23 +10,22 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "Please add an email"],
       unique: true,
+      validate:{
+validator:(value)=>{
+  const re =
+  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  return value.match(re)
+},
+      },
     },
     password: {
       type: String,
       required: [true, "Please add a password"],
     },
+   
   },
   {
     timestamps: true,
   },
 )
-userSchema.set("toJSON",{
-    transform:(document,returnedObject)=>{
-        returnedObject.id =returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject._v;
-        delete returnedObject.password;
-    },
-});
-//userSchema.plugin(uniqueValidator,{message:"email already in use"});
 module.exports = mongoose.model("User", userSchema)

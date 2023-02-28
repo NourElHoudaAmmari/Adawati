@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:adawati/models/don_model.dart';
 import 'package:http/http.dart' as http;
 
-import 'config.dart';
+import '../config.dart';
 
 class APIService{
   static var client =http.Client();

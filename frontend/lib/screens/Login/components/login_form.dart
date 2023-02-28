@@ -1,5 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors
 
+import 'package:adawati/screens/homepage/homepage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/already_have_an_account_acheck.dart';
@@ -8,7 +10,10 @@ import '../../Signup/signup_screen.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:adawati/services/api_service.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -16,29 +21,44 @@ class LoginForm extends StatefulWidget {
 }
 class _LoginFormState extends State<LoginForm>{
 TextEditingController emailController = TextEditingController();
-TextEditingController passwordController =TextEditingController();
-bool _isNotValidate = false;
- String name="", password="", email="", msg = "";
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+ TextEditingController passwordController =TextEditingController();
+    bool _isNotValidate = false;
+  @override
+  void dispose(){
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose(); 
+  }
+ /* final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+ final AuthService authService = AuthService();
 
+  void loginUser() {
+    authService.signInUser(
+      context: context,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+  }*/
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _scaffoldKey,
       child: Column(
         children: [
           TextFormField(
-                      controller: emailController,
+           controller: emailController,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             cursorColor: kPrimaryColor,
             onSaved: (email) {},
+            
             decoration: InputDecoration(
+              errorText: _isNotValidate ?"Veuillez entrer votre email":null,
               hintText: "Adresse email",
-                    errorText: _isNotValidate ?"Veuillez entrer email adresse":null,
               prefixIcon: Padding(
                 padding: const EdgeInsets.all(defaultPadding),
-                child: Icon(Icons.person),
+            child: Icon(Icons.email_outlined,color:Color.fromARGB(255, 189, 188, 188),),
+            
                 
               ),
             ),
@@ -46,27 +66,59 @@ bool _isNotValidate = false;
           Padding(
             padding: const EdgeInsets.symmetric(vertical: defaultPadding),
             child: TextFormField(
-              controller: passwordController,
+            controller: passwordController,
               textInputAction: TextInputAction.done,
               obscureText: true,
               cursorColor: kPrimaryColor,
               decoration: InputDecoration(
+                errorText: _isNotValidate ?"Veuillez entrer votre mot de passe":null,
                 hintText: "Mot de passe",
-                      errorText: _isNotValidate ?"Veuillez entrer email adresse":null,
+                    
                 prefixIcon: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
-                  child: Icon(Icons.lock),
+           child: Icon(Icons.lock_outline,color:Color.fromARGB(255, 189, 188, 188),),
                 ),
               ),
             ),
           ),
+          Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: InkWell(
+                    onTap: () {
+          
+                    },
+                    child: const Text("Forgot Password?",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 77, 132, 243),
+                          fontSize: 15,
+                        )),
+                  ),
+                ),
+          ),
           const SizedBox(height: defaultPadding),
           Hero(
             tag: "login_btn",
-            child: ElevatedButton(
-              onPressed: () {
-                   connectionWithDB();
+            child: ElevatedButton (
+              onPressed: (){
+FirebaseAuth.instance.signInWithEmailAndPassword(
+  email: emailController.text,
+   password: passwordController.text).then((value){
+    Navigator.push(context, 
+    MaterialPageRoute(builder: (context)=>HomePage()));
+   }).onError((error, stackTrace) {
+    Fluttertoast.showToast(
+  msg: "les informations d'identification invalides",
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.BOTTOM,
+  backgroundColor: Colors.red,
+  textColor: Colors.white,
+);
+    print("Error ${error.toString()}");
+   });
               },
+              // loginUser,      
               style:ButtonStyle(
 backgroundColor: MaterialStateProperty.all(kontColor),
               ),
@@ -92,44 +144,5 @@ backgroundColor: MaterialStateProperty.all(kontColor),
       ),
     );
   }
-    connectionWithDB() async {
-    var Url = Uri.parse('http://10.0.2.2:3000/api/login');
-    var data =
-        jsonEncode({'email': emailController.text, 'password': passwordController.text});
-    var head = {'Content-Type': 'application/json; charset=UTF-8'};
-
-    try {
-      var res = await http.post(Url, body: data, headers: head);
-
-      res.statusCode == 200
-          ? {
-              setState(() {
-                msg = 'success';
-                showSnackBar(msg);
-                Timer(
-                    Duration(seconds: 3),
-                    () => {
-                          Navigator.of(context).pushReplacementNamed("homepage")
-                        });
-              })
-            }
-          : {
-              setState(() {
-                msg = 'failure';
-                showSnackBar(msg);
-              })
-            };
-    } on SocketException catch (_) {
-      msg = "failed in connection";
-      setState(() {
-        showSnackBar(msg);
-      });
-    }
-  }
-
-  void showSnackBar(String msg) {
-    SnackBar snackBar = new SnackBar(content: Text(msg));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-  
+ 
 }

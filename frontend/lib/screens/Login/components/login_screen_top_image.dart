@@ -14,14 +14,14 @@ class LoginScreenTopImage extends StatelessWidget {
       children: [
          const Text(
           "Se Connecter",
-          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 36),
+          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 34),
         ),
         SizedBox(height: defaultPadding * 2),
         Row(
           children: [
             const Spacer(),
             Expanded(
-              flex: 8,
+              flex: 7,
               child: Image.asset(
             "assets/images/logo.png",
              ),

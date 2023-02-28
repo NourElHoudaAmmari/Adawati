@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler")
 const User = require("../models/UserModel")
 
 // @desc    Register new user
-// @route   POST /api/users
+// @route   POST /users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body
@@ -47,7 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 // @desc    Authenticate a user
-// @route   POST /api/users/login
+// @route   POST /users/login
 // @access  Public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body
@@ -64,17 +64,30 @@ const loginUser = asyncHandler(async (req, res) => {
     })
   } else {
     res.status(400)
-    throw new Error("Invalid credentials")
+    throw new Error("Invalid password")
   }
 })
 
 // @desc    Get user data
-// @route   GET /api/users/me
+// @route   GET /users/me
 // @access  Private
 const getMe = asyncHandler(async (req, res) => {
   res.status(200).json(req.user)
 })
+const tokenIsValid=asyncHandler(async(req,res)=>{
+  try {
+    const token = req.header("x-auth-token");
+    if (!token) return res.json(false);
+    const verified = jwt.verify(token, "passwordKey");
+    if (!verified) return res.json(false);
 
+    const user = await User.findById(verified.id);
+    if (!user) return res.json(false);
+    res.json(true);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 // Generate JWT
 const generateToken = (id) => {
   console.log(id)
@@ -88,4 +101,5 @@ module.exports = {
   registerUser,
   loginUser,
   getMe,
+  tokenIsValid,
 }
