@@ -2,6 +2,9 @@ import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+
+import '../constants.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -17,16 +20,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Mot de passe oublié"),
+        title: Text("mot de passe oublié"),
       ),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [
               Container(
+                padding:const EdgeInsets.all(defaultPadding),
                 alignment: Alignment.center,
-                height: 250.0,
-                child:Image.asset("assets/icons/signup.svg"),
+                height: 200.0,
+                child:Lottie.asset("assets/forgetpass.json"),
               ),
               SizedBox(
                 height: 10.0,
@@ -34,18 +38,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 30.0),
                 child: TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                       cursorColor: kPrimaryColor,
                   controller: forgetPasswordController,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: Padding(
+                  padding: const EdgeInsets.all(defaultPadding),
+           child: Icon(Icons.email_outlined,color:Color.fromARGB(255, 189, 188, 188),),
+                ),
                     hintText: 'Email',
-                    enabledBorder: OutlineInputBorder(),
                   ),
                 ),
               ),
               SizedBox(
-                height: 10.0,
+                height: defaultPadding,
               ),
               ElevatedButton(
+                
                 onPressed: ()async{
 
                   var forgotEmail = forgetPasswordController.text.trim();
@@ -61,7 +70,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                  }
                    }
                 }, 
-                child: Text("Réinitialiser mot de passe"),
+                child: Text("Soumettre"),
+                
+                style: ButtonStyle(
+                  
+                  backgroundColor: MaterialStateProperty.all(kontColor),
+                ),
                 ),
             ],
           ),

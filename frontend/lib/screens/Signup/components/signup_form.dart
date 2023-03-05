@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 //import'package:adawati/screens/Signup/components/socal_sign_up.dart';
 import '../../../components/already_have_an_account_acheck.dart';
@@ -15,6 +16,8 @@ import 'package:adawati/config.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:adawati/services/api_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import '../../homepage/homepage.dart';
 
 
 class SignUpForm extends StatefulWidget {
@@ -27,6 +30,22 @@ class _SignUpFormState extends State<SignUpForm>{
  TextEditingController passwordController = TextEditingController();
    TextEditingController nameController = TextEditingController();
    bool _isNotValidate = false;
+   Future<UserCredential> signInWithGoogle() async {
+  // Trigger the authentication flow
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+  // Create a new credential
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
+  );
+
+  // Once signed in, return the UserCredential
+  return await FirebaseAuth.instance.signInWithCredential(credential);
+}
   Future<UserCredential> signInWithFacebook() async {
   // Trigger the sign-in flow
   final LoginResult loginResult = await FacebookAuth.instance.login();
@@ -187,19 +206,51 @@ RegisterRequestModel model = LoginRequestModel(
               );
             },
           ),
-          OrDivider (),
-Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: <Widget>[
-     SocalIcon(
-      iconSrc: "assets/icons/facebook.svg",
-      press:() async{
-      await  signInWithFacebook();
-      },
+                    OrDivider (),
+            ElevatedButton(
+  onPressed: () async{
+    try{
+   await signInWithGoogle();
+   Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+        );
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Une erreur est survenue lors de la connexion avec Google.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      print(e);
+    }
+  },
+  style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(Colors.white),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(color: Colors.black),
+      ),
     ),
+  ),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Image.asset(
+        "assets/images/icongoogle.png",
+        height: 20,
+      ),
+      SizedBox(width: defaultPadding / 2),
+      Text(
+        "Se connecter avec Google",
+        style: TextStyle(color: Colors.black,fontSize: 16),
+      ),
+    ],
+  ),
+),
 
-],
-)
 
         ],
       ),
@@ -208,35 +259,3 @@ Row(
 
 }
 
-class SocalIcon extends StatelessWidget {
-  final String iconSrc;
-  final Function press;
-  const SocalIcon({
-    Key? key,
-     required this.iconSrc,
-     required this.press,
-  }):super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: press(),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 2,
-            color: kPrimaryLightColor,
-          ),
-          shape: BoxShape.circle,
-        ),
-        child: SvgPicture.asset(
-       iconSrc,
-        height: 20,
-        width: 20,
-        ),
-      ),
-    );
-  }
-}

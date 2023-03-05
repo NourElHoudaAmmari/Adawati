@@ -16,16 +16,13 @@ import 'package:adawati/services/api_service.dart';
 import'package:firebase_core/firebase_core.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
-void main()async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyCkMtHeRa5qvup24yPS7-NL7BO9uY4QHlc",
-      projectId: "adawati-7f36f",
-      messagingSenderId: "556775697133",
-      appId: "1:556775697133:web:5305a4060247df2b56bae4",
-  ));
-  runApp( MyApp());
+void main() async{
+ try {
+   WidgetsFlutterBinding.ensureInitialized();
+   await Firebase.initializeApp();
+ } catch (e) {}
+ runApp(MyApp());
+
 }/* MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
