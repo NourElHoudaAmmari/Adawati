@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Adawati</string>
+ <string name="facebook_app_name">adawati</string>
+  <string name="facebook_app_id">1339797393234707</string>
+  <string name="fb_login_protocol_scheme">fb1e86a631adfd8b3807a1f56fd32b7121</string>
+</resources>
+

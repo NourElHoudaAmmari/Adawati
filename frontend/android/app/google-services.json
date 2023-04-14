@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "556775697133",
+    "project_id": "adawati-7f36f",
+    "storage_bucket": "adawati-7f36f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556775697133:android:a0ae61a34a8396ca56bae4",
+        "android_client_info": {
+          "package_name": "com.example.adawati"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556775697133-sddu8386t3g981nbarfsnaqq201r08g7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMGhOYma3EUUqq_VZB2PJG_QwsJJjOJjs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556775697133-sddu8386t3g981nbarfsnaqq201r08g7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
