@@ -5,7 +5,8 @@ class FormEdit extends StatelessWidget {
 
 FormEdit({
   required this.labledText,
-  required this.mycontroller
+  required this.mycontroller, 
+ // required hintText
 }); 
 
   // ignore: empty_constructor_bodies
@@ -13,22 +14,20 @@ FormEdit({
   Widget build(BuildContext context) {
     return TextFormField(
       controller: mycontroller,
-      validator: (value){
-        if(value!.isEmpty){
-          return "the $labledText is required";
-        }
-      },
       decoration:InputDecoration(
         labelText: labledText,
-       enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(width: 3,color: Colors.grey,)
-        ),
+       contentPadding: EdgeInsets.symmetric(vertical: 55),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(width: 3,color: Colors.grey)),
+          borderSide: BorderSide(width: 3,color: Colors.blue)),
           errorBorder: const OutlineInputBorder(
             borderSide: BorderSide(width: 3,color: Colors.red)),
             focusedErrorBorder: const OutlineInputBorder(borderSide: BorderSide(width: 3,color: Colors.red))
       ),
+       validator: (value){
+        if(value!.isEmpty){
+          return "Ce champ est obligatoire.";
+        }
+      },
      
               
     );

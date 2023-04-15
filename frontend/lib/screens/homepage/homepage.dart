@@ -1,5 +1,4 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, avoid_returning_null_for_void, must_be_immutable, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
-
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
@@ -11,6 +10,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../dons/don_details.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   late Stream<QuerySnapshot> _stream;
 
   @override
-  void initState() {
+  void get initState {
     super.initState;
     //Create stream to listen to the 'items' collection
     _stream = FirebaseFirestore.instance.collection('dons').snapshots();
@@ -39,12 +40,13 @@ class _HomePageState extends State<HomePage> {
         ),
         );
     }
-   @override
+  @override
     void initState(){
 getDocId();
 super.initState;
     }
-    return Scaffold(
+    
+   return Scaffold(
      // backgroundColor:Colors.grey[100] ,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
@@ -63,11 +65,7 @@ super.initState;
 mainAxisAlignment: MainAxisAlignment.spaceAround,
 children: [
   IconButton(
-    onPressed:(){
-      Navigator.push(context,
-    MaterialPageRoute(builder: (context) => HomePage()),
-  );
-    },
+    onPressed:(){},
    icon: const Icon(Icons.home),
    ),
    IconButton(
@@ -79,11 +77,7 @@ children: [
       onPressed: (){},
     icon: const Icon(Icons.chat),
     ),
-     IconButton(onPressed: (){
-      Navigator.push(context,
-    MaterialPageRoute(builder: (context) => ProfileScreen()),
-  );
-     },
+     IconButton(onPressed: (){},
     icon: const Icon(Icons.person),
     ),
 
@@ -120,76 +114,110 @@ children: [
                 color: Color.fromARGB(255, 103, 103, 103),
               ),
               onPressed: () {}),
-              IconButton(
-          icon: Icon(
-            Icons.logout,
-            color: Color.fromARGB(255, 103, 103, 103),
-          ),
-          onPressed: () {
-           AuthentificationRepository.instance.logout();
-  print("logout");
-          },
-        ),
-          
         ],
       ),
 
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _stream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          //Check error
-          if (snapshot.hasError) {
-            return Center(child: Text('Some error occurred ${snapshot.error}'));
-          }
+      body: Column(
+        children: [
+           Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Row(
+    children: [
+      Expanded(
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: 'Recherche',
+            prefixIcon: Icon(Icons.search),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+        ),
+      ),
+      IconButton(
+        onPressed: () {},
+        icon: Icon(Icons.filter_list,
+        color: Colors.red,),
+      ),
+    ],
+  ),
+),
 
-          //Check if data arrived
-          if (snapshot.hasData) {
-            //get the data
-            QuerySnapshot querySnapshot = snapshot.data;
-            List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-
-            //Convert the documents to Maps
-            List<Map> items = documents.map((e) => e.data() as Map).toList();
-
-            //Display the grid
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, //Number of columns
-                childAspectRatio: 0.7, //Ratio of height to width of each grid item
-              ),
-              itemCount: items.length,
-              itemBuilder: (BuildContext context, int index) {
-                //Get the item at this index
-                Map thisItem = items[index];
-                //Return the widget for the grid item
-                return Card(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: thisItem.containsKey('image')
-                            ? Image.network('${thisItem['image']}')
-                            : Placeholder(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '${thisItem['title']}',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+          
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _stream,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                //Check error
+                if (snapshot.hasError) {
+                  return Center(child: Text('Some error occurred ${snapshot.error}'));
+                }
+          
+                //Check if data arrived
+                if (snapshot.hasData) {
+                  //get the data
+                  QuerySnapshot querySnapshot = snapshot.data;
+                  List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+          
+                  //Convert the documents to Maps
+                  List<Map> items = documents.map((e) => {
+                    'id':e.id,
+                    'title':e['title'],
+                  }).toList();
+          
+                  //Display the grid
+                  return GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, //Number of columns
+                      childAspectRatio: 0.7, //Ratio of height to width of each grid item
+                    ),
+                    itemCount: items.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      //Get the item at this index
+                      Map thisItem = items[index];
+                      //Return the widget for the grid item
+                      return Card(
+                        child: GestureDetector(
+                       onTap: () {Navigator.push(
+                        context,
+                       MaterialPageRoute(
+                       builder: (context) =>DonDetails(thisItem['id'])),
+                        );
+                       // Naviguer vers la page souhaitée
+                            },
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: thisItem.containsKey('image')
+                                  ? Image.network('${thisItem['image']}')
+                                  :  Container(),
+                                
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('${thisItem['title']}',
+                                // ignore: prefer_const_constructors
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: kontColor
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                );
+                      );
+                    },
+                  );
+                }
+          
+                //Show loader
+                return Center(child: CircularProgressIndicator());
               },
-            );
-          }
-
-          //Show loader
-          return Center(child: CircularProgressIndicator());
-        },
+            ),
+          ),
+        ],
       ),
       
     );
@@ -242,4 +270,7 @@ title: Text('Ajouter un don'),
         );
       }
 }
+
+
+     
 

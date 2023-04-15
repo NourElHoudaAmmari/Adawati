@@ -3,6 +3,7 @@
 import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
+import 'package:adawati/screens/demande/demande_screen.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 
 import 'package:flutter/material.dart';
@@ -94,7 +95,12 @@ ListTile(
       fontSize: 18,
     ),
   ),
-  onTap: null,
+  onTap: (){
+      Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+  },
 ),
 ListTile(
   leading: Icon(Icons.add_task),
@@ -105,7 +111,12 @@ ListTile(
     ),
   ),
   onTap: (){
-     
+    
+      Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DemandeScreen()),
+            );
+  
   },
 ),
 ListTile(

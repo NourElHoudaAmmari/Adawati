@@ -44,8 +44,8 @@ TextEditingController emailController = TextEditingController();
   return await FirebaseAuth.instance.signInWithCredential(credential);
 }
 @override
-void initState() {
-  super.initState();
+void init() {
+  super.initState;
 
   // Get the isLoggedIn value from shared preferences
   SharedPreferences.getInstance().then((prefs) {
