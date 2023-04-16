@@ -247,7 +247,7 @@ class _DonPageState extends State<DonPage> {
   ),
   validator: (value) {
     if (value == null || value.isEmpty) {
-      return 'Veuillez entrer le titre';
+      return 'Veuillez entrer une adresse';
     }
     return null;
   },
@@ -320,7 +320,7 @@ class _DonPageState extends State<DonPage> {
               ),
               SizedBox(height: 15),
              Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
+ // crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     Text(
       'Etat',
@@ -383,6 +383,7 @@ class _DonPageState extends State<DonPage> {
     ),
     SizedBox(height: 10,),
  TextFormField(
+    maxLength: 8,
   controller: _phoneController,
   decoration: InputDecoration(
     hintText: 'Ex: 25173464',
@@ -434,29 +435,54 @@ class _DonPageState extends State<DonPage> {
          ); },
         ),  
        ),
-       body:
+       body:Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(primary: kontColor),
+        ),
+        child: Form(
+          key: _formKey,
+          child: 
        Stepper(
         type: StepperType.horizontal,
         currentStep: _activeStepIndex,
         steps: stepList(),
       onStepContinue: () {
         final isLastStep = _activeStepIndex == stepList().length -1;
-        if(isLastStep){
-setState(() {
-  isCompleted = true;
-});
-_addDon();
-          print('completed');
+        _formKey.currentState!.validate();
+        bool isDetailValid = isDetailComplete();
+        if(isDetailValid){
+   if(isLastStep){
+    _addDon();
+
+          setState(() {
+            
+            isCompleted = true;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: Colors.green,
+      content: Text(
+        'Don ajouté',
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
+  );
         }else{
           setState(() {
-            _activeStepIndex +=1;
+            _activeStepIndex += 1;
           });
         }
+        }
+     
           
         },
-        onStepTapped: (step)=>setState(()=>_activeStepIndex = step),
+        onStepTapped: (step){
+          _formKey.currentState!.validate();
+          setState(() {
+            _activeStepIndex = step;
+          });
+        },
       onStepCancel: () {
-        
           if (_activeStepIndex == 0) {
             return;
           }
@@ -506,8 +532,25 @@ valueColor: AlwaysStoppedAnimation(Colors.grey),
   );
 },
         ),
-    
+        ),
+       ),
     );
+  }
+  bool isDetailComplete(){
+    if(_activeStepIndex ==0){
+      if(_titleController.text.isEmpty || _descriptionController.text.isEmpty || _adresseController.text.isEmpty){
+        return false;
+      }else{
+        return true;
+      }
+    }else if (_activeStepIndex ==1){
+      if(_phoneController.text.isEmpty){
+        return false;
+      }else{
+        return true;
+      }
+    }
+    return false;
   }
   
   

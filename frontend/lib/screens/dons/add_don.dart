@@ -70,17 +70,7 @@ class _AddDonState extends State<AddDon> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
 
-              Center(
-  child: Text(
-    '1. Informations générales',
-    style: TextStyle(
-      color: Colors.black,
-      fontStyle: FontStyle.italic,
-      fontSize: 18,
-    ),
-  ),
-),
-              SizedBox(height: 30,),
+      
             
        Column(
   crossAxisAlignment: CrossAxisAlignment.start,

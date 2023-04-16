@@ -122,16 +122,6 @@ class _AddDetailsDonState extends State<AddDetailsDon> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
 
-              Center(
-  child: Text(
-    '2. Détails du don',
-    style: TextStyle(
-      color: Colors.black,
-      fontStyle: FontStyle.italic,
-      fontSize: 18,
-    ),
-  ),
-),
               SizedBox(height: 25,),
               GestureDetector(
                 onTap: () async {
