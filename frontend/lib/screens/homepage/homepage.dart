@@ -5,13 +5,14 @@ import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/dons/add_don.dart';
+import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/dons/don_details.dart';
 import 'package:adawati/screens/main_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../dons/don_details.dart';
+//import '../dons/don_details.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -197,7 +198,7 @@ children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text('${thisItem['title']}',
-                                // ignore: prefer_const_constructors
+                               
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -254,7 +255,7 @@ leading: Icon(Icons.post_add),
 title: Text('Ajouter un don'),
  onTap: ()=>{ Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => AddDon()),
+    MaterialPageRoute(builder: (context) =>DonPage()),
   )
 },
 ),

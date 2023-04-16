@@ -289,7 +289,7 @@ ElevatedButton(
 onPressed: _isLoading ? null : _addDon,
 child: _isLoading
 ? CircularProgressIndicator(
-valueColor: AlwaysStoppedAnimation(Colors.white),
+valueColor: AlwaysStoppedAnimation(Colors.grey),
 )
 : Text('Publier',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
 ),
