@@ -186,13 +186,23 @@ imagePath = await ref.getDownloadURL();
                            );
 try {
       await controller.updateRecord(userData);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Données modifiées avec succès!',style: TextStyle(backgroundColor: Color.fromARGB(255, 219, 218, 218),color: Colors.green),)),
-      );
+     ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text('Données modifiées avec succès!', style: TextStyle(backgroundColor: Color.fromARGB(255, 219, 218, 218), color: Colors.green)),
+    behavior: SnackBarBehavior.floating,
+    margin: EdgeInsets.only(top: 10, right: 10),
+    elevation: 4,
+  ),
+);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
        
-        SnackBar(content: Text('Une erreur s\'est produite: $e',style: TextStyle(backgroundColor: Color.fromARGB(255, 219, 218, 218),color: Colors.red),)),
+        SnackBar(content: Text('Une erreur s\'est produite: $e',style: TextStyle(backgroundColor: Color.fromARGB(255, 219, 218, 218),color: Colors.red),),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(top: 10,right: 10),
+        elevation: 4,
+        ),
+        
       );
     }
   },

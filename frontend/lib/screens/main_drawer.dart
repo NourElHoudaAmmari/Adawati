@@ -3,18 +3,46 @@
 import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
+import 'package:adawati/screens/demande/demande_screen.dart';
+import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-class MainDrawer extends StatelessWidget {
+class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
 
   @override
+  State<MainDrawer> createState() => _MainDrawerState();
+}
+
+class _MainDrawerState extends State<MainDrawer> {
+    final CollectionReference usersRef =
+      FirebaseFirestore.instance.collection("users");
+     String name = '';
+     String email ='';
+       @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+    void fetchUserData() async {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser != null) {
+    DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
+    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+    if (userData != null) {
+      setState(() {
+        name = userData['name'];
+        email = userData['email'];
+      });
+    }
+  }
+}
+  @override
   Widget build(BuildContext context) {
-      final User? user = FirebaseAuth.instance.currentUser;
-  String userName = user != null ? user.displayName ?? '' : '';
-     String userEmail = user != null ? user.email ?? '' : '';
+     
     return Drawer(
       child: Column(
         children:<Widget> [
@@ -40,14 +68,14 @@ Container(
           ),
         ),
         Text(  
-   userName,
+  name,
    style: TextStyle(
    fontSize: 22,
   color: Colors.white,
  fontWeight: FontWeight.bold,),
     ),
  Text(  
-    userEmail,
+   email,
    style: TextStyle(
     color: Colors.white,
    fontWeight: FontWeight.normal,),
@@ -94,7 +122,12 @@ ListTile(
       fontSize: 18,
     ),
   ),
-  onTap: null,
+  onTap: (){
+     Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DonList()),
+            );
+  },
 ),
 ListTile(
   leading: Icon(Icons.add_task),
@@ -105,7 +138,10 @@ ListTile(
     ),
   ),
   onTap: (){
-     
+      Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DemandeScreen()),
+            );
   },
 ),
 ListTile(
@@ -124,6 +160,7 @@ ListTile(
     'Logout',
     style: TextStyle(
       fontSize: 18,
+      color: Colors.red,
     ),
   ),
   onTap: (){

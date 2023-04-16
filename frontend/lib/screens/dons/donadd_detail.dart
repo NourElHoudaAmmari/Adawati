@@ -52,7 +52,7 @@ class _AddDetailsDonState extends State<AddDetailsDon> {
       });
       final title = _titleController.text.trim();
        final description = _descriptionController.text.trim();
-        final etat = _etatController.text.trim();
+        final etat = selectedEtat;
          final niveau = _niveauController.text.trim();
            final adresse = _adresseController.text.trim();
             final phone = _phoneController.text.trim();
@@ -216,7 +216,7 @@ class _AddDetailsDonState extends State<AddDetailsDon> {
           );
           for(var etats in etats!){
            etatItems.add(DropdownMenuItem(
-              value:etats.id ,
+              value:etats["libelle"] ,
               child:Text(
             etats['libelle'],
               ),
