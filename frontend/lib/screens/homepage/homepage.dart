@@ -1,5 +1,4 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, avoid_returning_null_for_void, must_be_immutable, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
-
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
@@ -12,6 +11,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../dons/don_details.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   late Stream<QuerySnapshot> _stream;
 
   @override
-  void initState() {
+  void  initState() {
     super.initState;
     //Create stream to listen to the 'items' collection
     _stream = FirebaseFirestore.instance.collection('dons').snapshots();
@@ -270,4 +271,7 @@ title: Text('Ajouter un don'),
         );
       }
 }
+
+
+     
 
