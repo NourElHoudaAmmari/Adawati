@@ -13,8 +13,8 @@ class DonPage extends StatefulWidget {
   @override
   State<DonPage> createState() => _DonPageState();
 }
-
 class _DonPageState extends State<DonPage> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
    final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
  final _descriptionController = TextEditingController();
@@ -45,6 +45,7 @@ class _DonPageState extends State<DonPage> {
   }
 
   Future<void> _addDon() async {
+
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -69,7 +70,9 @@ class _DonPageState extends State<DonPage> {
       setState(() {
         _isLoading = false;
       });
-      Navigator.of(context).pop();
+      Navigator.push(context,
+    MaterialPageRoute(builder: (context) => DonList()),
+      );
     }
   }
 
@@ -110,6 +113,7 @@ class _DonPageState extends State<DonPage> {
     hintStyle: TextStyle(
       color: Colors.grey[500],
       fontSize: 14,
+      
     ),
     filled: true, // ajouter un fond rempli de couleur
     fillColor: Colors.grey[200], // définir la couleur de l'arrière-plan
@@ -170,7 +174,9 @@ class _DonPageState extends State<DonPage> {
  SizedBox(height: 18),
  Column(
   crossAxisAlignment: CrossAxisAlignment.start,
+  
   children: [
+    Padding(padding: EdgeInsets.all(8.0)),
     Text(
       'Categorie',
       style: TextStyle(

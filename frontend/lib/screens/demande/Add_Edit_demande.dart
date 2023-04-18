@@ -68,9 +68,8 @@ class _AddEditDemandeState extends State<AddEditDemande> {
             color: Colors.white,
           ),
           onPressed: () {
-          Navigator.push(context,
-    MaterialPageRoute(builder: (context) => DemandeScreen()),
-         ); },
+       Navigator.of(context).pop();
+        },
         ),
         // backgroundColor: Colors.transparent,
       

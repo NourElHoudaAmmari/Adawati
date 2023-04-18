@@ -81,8 +81,7 @@ children: [
           icon: Icon(
             Icons.arrow_back,
             color: Colors.white,
-          ), onPressed: () {  Navigator.push(context, 
-            MaterialPageRoute(builder: (context)=>HomePage()));},
+          ), onPressed: () {  Navigator.of(context).pop();},
         ),actions: <Widget>[
           IconButton(
               icon: Icon(

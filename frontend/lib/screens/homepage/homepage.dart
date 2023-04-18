@@ -4,12 +4,12 @@ import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
-import 'package:adawati/screens/dons/add_don.dart';
 import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/dons/don_details.dart';
 import 'package:adawati/screens/main_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 //import '../dons/don_details.dart';
@@ -63,12 +63,18 @@ super.initState;
         child: IconTheme(
           data: IconThemeData(color: Colors.grey[100]),
          child: Padding(padding: const EdgeInsets.all(12.0),
-         child: Row(
+                 child: Row(
 mainAxisAlignment: MainAxisAlignment.spaceAround,
 children: [
   IconButton(
-    onPressed:(){},
+    onPressed:(){
+         Navigator.push(context,
+    MaterialPageRoute(builder: (context) => HomePage()),
+      );
+      
+    },
    icon: const Icon(Icons.home),
+   
    ),
    IconButton(
     onPressed: (){},
@@ -79,7 +85,12 @@ children: [
       onPressed: (){},
     icon: const Icon(Icons.chat),
     ),
-     IconButton(onPressed: (){},
+     IconButton(onPressed: (){
+      Navigator.push(context,
+    MaterialPageRoute(builder: (context) => ProfileScreen()),
+      );
+      
+     },
     icon: const Icon(Icons.person),
     ),
 
@@ -128,10 +139,10 @@ children: [
       Expanded(
         child: TextField(
           decoration: InputDecoration(
-            hintText: 'Recherche',
+            hintText: 'Rechercher',
             prefixIcon: Icon(Icons.search),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(15),
             ),
           ),
         ),
@@ -165,6 +176,7 @@ children: [
                   List<Map> items = documents.map((e) => {
                     'id':e.id,
                     'title':e['title'],
+                     'description':e['description'],
                   }).toList();
           
                   //Display the grid
@@ -206,6 +218,25 @@ children: [
                                 ),
                               ),
                             ),
+                            Divider(thickness: 1,),
+                             Text('${thisItem['description']}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                color: Colors.grey.shade500,
+                                  fontStyle: FontStyle.italic
+                                ),
+                              ),
+                            const SizedBox(height: 5.0,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  onPressed: (){}, 
+                                  icon: Icon(CupertinoIcons.heart),
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -235,7 +266,7 @@ void _onButtomPressed(){
             child:Container(
             child: _buildBottomNavigationMenu(),
             decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
+              color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(10),
                 topRight: const Radius.circular(10),
@@ -251,21 +282,25 @@ void _onButtomPressed(){
       return Column(
           children:<Widget> [
 ListTile(
-leading: Icon(Icons.post_add),
-title: Text('Ajouter un don'),
+leading: Icon(Icons.post_add,color: kontColor),
+title: Text('Ajouter un don',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
  onTap: ()=>{ Navigator.push(
     context,
     MaterialPageRoute(builder: (context) =>DonPage()),
   )
 },
+ tileColor: Colors.amber[50],
 ),
- Divider(thickness: 2,),
+ Divider(thickness: 3,),
  ListTile(
-     leading: Icon(Icons.add_task),
-     title: Text('Ajouter une demande'),
+ 
+     leading: Icon(Icons.add_task,color: kPrimaryColor,),
+     
+     title: Text('Ajouter une demande',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
      onTap: ()=>{ Navigator.push(context,
     MaterialPageRoute(builder: (context) => AddEditDemande()),
   )},
+  tileColor: Colors.amber[50],
    ),
 
           ],
