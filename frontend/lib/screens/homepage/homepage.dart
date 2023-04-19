@@ -15,18 +15,22 @@ import 'package:flutter/material.dart';
 //import '../dons/don_details.dart';
 
 class HomePage extends StatefulWidget {
+    HomePage({Key? key}) : super(key: key) ;
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  
+  final db = FirebaseFirestore.instance;
+  late String id;
   late Stream<QuerySnapshot> _stream;
-
+  CollectionReference _reference = FirebaseFirestore.instance.collection('dons');
   @override
-  void  initState() {
+  void get  initState {
     super.initState;
     //Create stream to listen to the 'items' collection
-    _stream = FirebaseFirestore.instance.collection('dons').snapshots();
+    _stream = _reference.snapshots();
   }
 final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
@@ -169,13 +173,14 @@ children: [
                 //Check if data arrived
                 if (snapshot.hasData) {
                   //get the data
-                  QuerySnapshot querySnapshot = snapshot.data;
+                  QuerySnapshot querySnapshot = snapshot.data!;
                   List<QueryDocumentSnapshot> documents = querySnapshot.docs;
           
                   //Convert the documents to Maps
                   List<Map> items = documents.map((e) => {
                     'id':e.id,
                     'title':e['title'],
+                     'image':e['image'],
                      'description':e['description'],
                   }).toList();
           

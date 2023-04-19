@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
      String email ='';
 
   @override
-  void  initState() {
+  void get  initState {
     super.initState;
     fetchUserData();
   }

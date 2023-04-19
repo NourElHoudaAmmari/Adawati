@@ -2,18 +2,11 @@
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/dons/don_details.dart';
-import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
 
 class DonList extends StatefulWidget {
   DonList({Key? key}) : super(key: key) ;
-    
-  
-
-
   @override
   State<DonList> createState() => _DonListState();
 }
@@ -25,8 +18,8 @@ class _DonListState extends State<DonList> {
   CollectionReference _reference = FirebaseFirestore.instance.collection('dons');
 
   @override
-  void initState(){
-    super.initState();
+  void get  initState{
+    super.initState;
        _stream = _reference.snapshots();
   }
   void deleteData(DocumentSnapshot doc)async{
