@@ -188,6 +188,7 @@ children: [
           
                   //Display the grid
                   return GridView.builder(
+                    padding: EdgeInsets.all(8),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2, //Number of columns
                       childAspectRatio: 0.7, //Ratio of height to width of each grid item
