@@ -1,5 +1,6 @@
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/screens/dons/don_list.dart';
+import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -71,8 +72,18 @@ class _DonPageState extends State<DonPage> {
         _isLoading = false;
       });
       Navigator.push(context,
-    MaterialPageRoute(builder: (context) => DonList()),
+    MaterialPageRoute(builder: (context) => HomePage()),
+    
       );
+               ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: Colors.green,
+      content: Text(
+        'Don ajouté',
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
+  );
     }
   }
 
@@ -464,15 +475,7 @@ class _DonPageState extends State<DonPage> {
             
             isCompleted = true;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      backgroundColor: Colors.green,
-      content: Text(
-        'Don ajouté',
-        style: TextStyle(color: Colors.white),
-      ),
-    ),
-  );
+ 
         }else{
           setState(() {
             _activeStepIndex += 1;

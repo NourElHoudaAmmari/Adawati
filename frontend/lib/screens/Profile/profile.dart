@@ -76,11 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                      width: 35,
                      height: 35,
                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.grey),
-                     child: const Icon(
-                   CupertinoIcons.pencil
-                      ,color:Colors.black,
-                      size: 20,
-                      ),
+                    
                      ),
                   ),
                 ],
@@ -124,13 +120,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                  textColor: Colors.red,
                  endIcon: false,
                   onPress: (){
-                    print("pressed here");
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return Container(
+                          child: AlertDialog(
+                            title: Text('Voulez-vous déconnectez ?'),
+                            actions: [
+                       TextButton(onPressed:(){
+                        Navigator.pop(context);
+                              }, 
+                              child: Text('Non')),
+                              TextButton(onPressed:(){
+          print("pressed here");
           AuthentificationRepository.instance.logout().
                       then((value) {
             print("signed out");
             Navigator.push(context, 
             MaterialPageRoute(builder: (context)=>LoginScreen()));
           });
+                              }, 
+                              child: Text('Oui',style: TextStyle(color: kPrimaryColor),)),
+                            ],
+                          ),
+                        );
+                      });
+          
                   }
                   ),
             ]

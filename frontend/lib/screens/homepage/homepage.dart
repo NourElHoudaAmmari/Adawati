@@ -6,11 +6,14 @@ import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/dons/don_details.dart';
+import 'package:adawati/screens/homepage/chat.dart';
+import 'package:adawati/screens/homepage/favoirs.dart';
 import 'package:adawati/screens/main_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 //import '../dons/don_details.dart';
 
@@ -20,6 +23,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+ 
+  
   late Stream<QuerySnapshot> _stream;
 
   @override
@@ -176,7 +181,9 @@ children: [
                   List<Map> items = documents.map((e) => {
                     'id':e.id,
                     'title':e['title'],
-                     'description':e['description'],
+                     'image':e['image'],
+                     'adresse':e['adresse'],
+                      'createdAt':e['createdAt'],
                   }).toList();
           
                   //Display the grid
@@ -212,31 +219,47 @@ children: [
                               child: Text('${thisItem['title']}',
                                
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
                                   color: kontColor
                                 ),
                               ),
                             ),
                             Divider(thickness: 1,),
-                             Text('${thisItem['description']}',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                color: Colors.grey.shade500,
-                                  fontStyle: FontStyle.italic
-                                ),
-                              ),
-                            const SizedBox(height: 5.0,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  onPressed: (){}, 
-                                  icon: Icon(CupertinoIcons.heart),
-                                  ),
-                              ],
-                            ),
+                       Row(
+  children: [
+    Icon(Icons.place_outlined, color: Colors.grey.shade500,),
+    SizedBox(width: 5), // Espacement entre l'icône et le texte
+    Text(
+      '${thisItem['adresse']}',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.normal,
+        color: Colors.grey.shade500,
+        fontStyle: FontStyle.italic,
+      ),
+    ),
+  ],
+),
+const SizedBox(height: 5.0,),
+                   Row(
+  children: [
+    Icon(Icons.alarm, color: Colors.grey.shade500),
+    SizedBox(width: 5), // Espacement entre l'icône et le texte
+   Text(
+  '${DateFormat('dd-MM-yyyy').format(thisItem['createdAt'].toDate())}',
+  style: TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.normal,
+    color: Colors.grey.shade500,
+    fontStyle: FontStyle.italic,
+  ),
+),
+  ],
+),
                           ],
                         ),
                       ),

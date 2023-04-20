@@ -10,6 +10,8 @@ import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../helpers/constants.dart';
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
 
@@ -164,10 +166,34 @@ ListTile(
       color: Colors.red,
     ),
   ),
-  onTap: (){
-  AuthentificationRepository.instance.logout();
-  print("logout");
-  },
+  onTap:  (){
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return Container(
+                          child: AlertDialog(
+                            title: Text('Voulez-vous déconnectez ?'),
+                            actions: [
+                       TextButton(onPressed:(){
+                        Navigator.pop(context);
+                              }, 
+                              child: Text('Non')),
+                              TextButton(onPressed:(){
+          print("pressed here");
+          AuthentificationRepository.instance.logout().
+                      then((value) {
+            print("signed out");
+            Navigator.push(context, 
+            MaterialPageRoute(builder: (context)=>LoginScreen()));
+          });
+                              }, 
+                              child: Text('Oui',style: TextStyle(color: kPrimaryColor),)),
+                            ],
+                          ),
+                        );
+                      });
+          
+                  }
 ),
         ],
       ),

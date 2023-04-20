@@ -29,16 +29,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     
 
    bool isObscure = true; // Step 1: Add isObscure variable
-     Future<void> _pickImage() async {
+     Future<void> _pickImage(ImageSource source) async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(
-      source: ImageSource.gallery,
-    );
+      source: source);
     if (image != null) {
       final File file = File(image.path);
       Reference ref = FirebaseStorage.instance.ref().child('${Path.basename(file.path)}');
-      await ref.putFile(file);
-      String downloadURL = await ref.getDownloadURL();
+     final UploadTask = ref.putFile(file);
+     final snapshot =await UploadTask;
+      String downloadURL = await snapshot.ref.getDownloadURL();
       setState(() {
         imageUrl = downloadURL;
       });
@@ -83,9 +83,35 @@ if(snapshot.hasData){
   width: 120,
   height: 120,
   child: InkWell(
-     onTap: () {
-                                _pickImage();
-                              },
+     onTap:  () async {
+                  await showModalBottomSheet(
+                    context: context,
+                    builder: (_) => BottomSheet(
+                      onClosing: () {},
+                      builder: (_) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            title: Text('Prendre une photo'),
+                            leading: Icon(Icons.camera_alt),
+                            onTap: () {
+                              _pickImage(ImageSource.camera);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ListTile(
+                            title: Text('Choisir depuis la galerie'),
+                            leading: Icon(Icons.photo_library),
+                            onTap: () {
+                              _pickImage(ImageSource.gallery);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
                                 child: imageUrl == ""
@@ -172,8 +198,9 @@ if (profileImage != null) {
 Reference ref = FirebaseStorage.instance
 .ref()
 .child('profilepics/${Path.basename(profileImage!.path)}');
-await ref.putFile(profileImage!);
-imagePath = await ref.getDownloadURL();
+final UploadTask= ref.putFile(profileImage!);
+final snapshot = await UploadTask;
+imagePath = await snapshot.ref.getDownloadURL();
 }
                           final userData =User(
                             id : id.text,
@@ -188,7 +215,7 @@ try {
       await controller.updateRecord(userData);
      ScaffoldMessenger.of(context).showSnackBar(
   SnackBar(
-    content: Text('Données modifiées avec succès!', style: TextStyle(backgroundColor: Color.fromARGB(255, 219, 218, 218), color: Colors.green)),
+    content: Text('Données modifiées avec succès!',),
     behavior: SnackBarBehavior.floating,
     margin: EdgeInsets.only(top: 10, right: 10),
     elevation: 4,
@@ -197,7 +224,7 @@ try {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
        
-        SnackBar(content: Text('Une erreur s\'est produite: $e',style: TextStyle(backgroundColor: Color.fromARGB(255, 219, 218, 218),color: Colors.red),),
+        SnackBar(content: Text('Une erreur s\'est produite: $e',),
         behavior: SnackBarBehavior.floating,
         margin: EdgeInsets.only(top: 10,right: 10),
         elevation: 4,
@@ -244,5 +271,3 @@ try {
     );
   }
 }
-
-
