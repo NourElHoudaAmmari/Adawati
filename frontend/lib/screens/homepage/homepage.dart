@@ -24,7 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
+ 
  final db = FirebaseFirestore.instance;
   late String id;
   late Stream<QuerySnapshot> _stream;
@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
     super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _reference.snapshots();
+     _stream = _reference.orderBy('createdAt', descending: true).snapshots();
   }
 final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
@@ -166,6 +167,7 @@ children: [
           
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
+              
               stream: _stream,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 //Check error
@@ -187,7 +189,7 @@ children: [
                      'adresse':e['adresse'],
                       'createdAt':e['createdAt'],
                   }).toList();
-          
+  
                   //Display the grid
                   return GridView.builder(
                     padding: EdgeInsets.all(8),
@@ -210,6 +212,7 @@ children: [
                        // Naviguer vers la page souhaitée
                             },
                         child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: thisItem.containsKey('image')
@@ -230,6 +233,10 @@ children: [
                               ),
                             ),
                             Divider(thickness: 1,),
+                            Column(
+                              children: [
+
+                            
                        Row(
   children: [
     Icon(Icons.place_outlined, color: Colors.grey.shade500,),
@@ -263,6 +270,9 @@ const SizedBox(height: 5.0,),
 ),
   ],
 ),
+  ],
+                            ),
+
                           ],
                         ),
                       ),

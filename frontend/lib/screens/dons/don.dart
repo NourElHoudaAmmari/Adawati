@@ -52,6 +52,7 @@ class _DonPageState extends State<DonPage> {
         _isLoading = true;
       });
       final title = _titleController.text.trim();
+       
        final description = _descriptionController.text.trim();
         final etat = selectedEtat;
       final categorie=selectedCategorie;
@@ -59,6 +60,7 @@ class _DonPageState extends State<DonPage> {
             final phone = _phoneController.text.trim();
       final imageDownloadUrl = await _uploadImageToStorage(_imageFile!);
       await FirebaseFirestore.instance.collection('dons').add({
+       
         'title': title,
        'description':description,
        'categorie':categorie,
@@ -67,6 +69,7 @@ class _DonPageState extends State<DonPage> {
        'phone':phone,
         'image': imageDownloadUrl,
         'createdAt': FieldValue.serverTimestamp(),
+        'favourites':[],
       });
       setState(() {
         _isLoading = false;

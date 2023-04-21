@@ -1,4 +1,5 @@
 import 'package:adawati/screens/dons/don_list.dart';
+import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,6 +13,7 @@ class DonDetails extends StatefulWidget {
  DonDetails(this.itemId,{Key? key}) : super(key: key) {
   _reference = FirebaseFirestore.instance.collection('dons').doc(itemId);
   _futureData = _reference.get();
+  WhishListService _service = WhishListService();
     
  }
    String? itemId;
@@ -24,8 +26,9 @@ class DonDetails extends StatefulWidget {
 
 class _DonDetailsState extends State<DonDetails> {
   
-
+bool _isLiked = false;
   late Map data;
+  late String? id;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +83,7 @@ class _DonDetailsState extends State<DonDetails> {
             //Get the data
             DocumentSnapshot documentSnapshot = snapshot.data;
             data = documentSnapshot.data() as Map;
-
+              id = data['id'];
             //display the data
            return Padding(
              padding: const EdgeInsets.only(left: 20.0),
@@ -100,44 +103,8 @@ class _DonDetailsState extends State<DonDetails> {
               ? Image.network('${data['image']}')
               : Container(),
                  ),
-                 Container(
-                  decoration: BoxDecoration(border:Border.all(color: Colors.white),borderRadius: BorderRadius.circular(8)  ),
-     
-      child: new Row(
-       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          SizedBox(width: 49,),
-        InkWell(
-  onTap: ()async {
-final Uri url=Uri(scheme: 'tel',
-path:'${data['phone']}' );
-if(await canLaunchUrl(url)){
-  await launchUrl(url);
-}else{
-  print('cannot launch this url');
-}
-  },
-  child: IconoMenu(
-    icon: Icons.call,
-    label: "Appel",
-  ),
-),
-SizedBox(width:180,),
-
-        InkWell(
-  onTap: () {
-    // Ajoutez ici la logique qui doit être exécutée lors du clic sur l'icône
-  },
-  child: IconoMenu(
-    icon: Icons.message,
-    label: "Message",
-  ),
-),
-        ],
-      ),
-      
-    ),
-                 const SizedBox(height: 10),
+   
+                 const SizedBox(height: 6),
                  Text("Titre :  " 
                    '${data['title']}',
                    style: const TextStyle(
@@ -147,18 +114,38 @@ SizedBox(width:180,),
                    ),
                    textAlign: TextAlign.left,
                  ),
-                 SizedBox(height: 8,),
-               Text(
-  "Publié le : ${DateFormat('dd-MM-yyyy HH:mm').format(data['createdAt'].toDate())}",
-  style: const TextStyle(
-    fontSize: 14,
-    fontStyle: FontStyle.normal,
-    color: Color.fromARGB(255, 92, 92, 92),
-  ),
-  textAlign: TextAlign.left,
+                 SizedBox(height: 3,),
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      "Publié le : ${DateFormat('dd-MM-yyyy HH:mm').format(data['createdAt'].toDate())}",
+      style: const TextStyle(
+        fontSize: 14,
+        fontStyle: FontStyle.normal,
+        color: Color.fromARGB(255, 92, 92, 92),
+      ),
+      textAlign: TextAlign.left,
+    ),
+    IconButton(
+      icon: Icon(_isLiked? Icons.favorite : Icons.favorite_border),
+      color: _isLiked ? Colors.red : Colors.black,
+      onPressed: () {
+         
+        setState(() {
+          _isLiked = !_isLiked;
+        });
+        WhishListService().updateFavourite(context, _isLiked, data['id']);
+        print(data);
+
+        
+      },
+      
+    ),
+  ],
 ),
                 
-                 SizedBox(height: 15),
+                 SizedBox(height: 10),
                  const Text(
                    "Informations :",
                    style: TextStyle(
@@ -286,6 +273,44 @@ SizedBox(width:180,),
                  ),
   ],
                          ),
+                         SizedBox(height: 12,),
+                                       Container(
+                  decoration: BoxDecoration(border:Border.all(color: Colors.white),borderRadius: BorderRadius.circular(8)  ),
+     
+      child: new Row(
+       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          SizedBox(width: 49,),
+        InkWell(
+  onTap: ()async {
+final Uri url=Uri(scheme: 'tel',
+path:'${data['phone']}' );
+if(await canLaunchUrl(url)){
+  await launchUrl(url);
+}else{
+  print('cannot launch this url');
+}
+  },
+  child: IconoMenu(
+    icon: Icons.call,
+    label: "Appel",
+  ),
+),
+SizedBox(width:180,),
+
+        InkWell(
+  onTap: () {
+    // Ajoutez ici la logique qui doit être exécutée lors du clic sur l'icône
+  },
+  child: IconoMenu(
+    icon: Icons.message,
+    label: "Message",
+  ),
+),
+        ],
+      ),
+      
+    ),
                ],
              ),
            ),

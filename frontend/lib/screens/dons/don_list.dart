@@ -18,14 +18,14 @@ class _DonListState extends State<DonList> {
   CollectionReference _reference = FirebaseFirestore.instance.collection('dons');
 
   @override
-  void get  initState{
+  void  initState(){
     super.initState;
        _stream = _reference.snapshots();
   }
   void deleteData(DocumentSnapshot doc)async{
   
   }
-
+final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,13 +33,13 @@ class _DonListState extends State<DonList> {
         title: Text('Liste des dons'),
         elevation: 0.0,
         backgroundColor: kontColor,
-        leading: IconButton(
+         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+            Icons.menu,
+            color: Color.fromARGB(255, 103, 103, 103),
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            _key.currentState?.openDrawer();
           },
         ),
         actions: <Widget>[
@@ -90,7 +90,8 @@ class _DonListState extends State<DonList> {
                   onTap: () {Navigator.push(
                         context,
                        MaterialPageRoute(
-                       builder: (context) =>DonDetails(thisItem['id'])),
+                       builder: (context) =>DonDetails(thisItem['id'])
+                       ),
                         );
                        // Naviguer vers la page souhaitée
                             },
