@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 
 class ProfileController extends GetxController{
   static ProfileController get instance =>Get.find();
+  var isProfilPicPathSet = false.obs;
+  var profilePicPath = "".obs;
 
 
 //repositories
@@ -33,6 +35,11 @@ if(email !=null){
   }
   uploadImage(File image)async{
     await _userRepo.uploadImageToFirebaseStorage(image);
+  }
+
+  void setProfileImagePath(String path){
+    profilePicPath.value = path;
+    isProfilPicPathSet.value = true;
   }
 
 
