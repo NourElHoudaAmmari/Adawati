@@ -15,7 +15,7 @@ class DonPage extends StatefulWidget {
 }
 class _DonPageState extends State<DonPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-   final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
  final _descriptionController = TextEditingController();
  final _categorieController=TextEditingController();
@@ -57,7 +57,9 @@ class _DonPageState extends State<DonPage> {
            final adresse = _adresseController.text.trim();
             final phone = _phoneController.text.trim();
       final imageDownloadUrl = await _uploadImageToStorage(_imageFile!);
-      await FirebaseFirestore.instance.collection('dons').add({
+    String donId = FirebaseFirestore.instance.collection('dons').doc().id;
+    await FirebaseFirestore.instance.collection('dons').doc(donId).set({
+      'id': donId,
         'title': title,
        'description':description,
        'categorie':categorie,
@@ -510,7 +512,7 @@ controlsBuilder: (context, details,{onStepContinue, onStepCancel}) {
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
-  ),
+            ),
                    onPressed:_isLoading ? null :details.onStepContinue,
             child:
             _isLoading

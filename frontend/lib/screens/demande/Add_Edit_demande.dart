@@ -14,7 +14,7 @@ class MyPopup extends StatelessWidget {
       child: Container(
         width: 100,
         height: 200,
-        child: AddEditDemande(),
+       
       ),
     );
   }
@@ -23,7 +23,7 @@ class MyPopup extends StatelessWidget {
 class AddEditDemande extends StatefulWidget {
  final DemandeModel? demande;
 final index;
-AddEditDemande({this.demande, this.index});
+AddEditDemande({this.demande, this.index,});
 
   @override
   State<AddEditDemande> createState() => _AddEditDemandeState();

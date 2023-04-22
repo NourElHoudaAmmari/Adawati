@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+   TextEditingController _searchController = TextEditingController();
   
   final db = FirebaseFirestore.instance;
   late String id;
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage> {
     super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _reference.snapshots();
+   
+
   }
 final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
@@ -49,6 +52,7 @@ final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
     void initState(){
 getDocId();
+ TextEditingController _searchController = TextEditingController();
 super.initState;
     }
     
@@ -142,6 +146,13 @@ children: [
     children: [
       Expanded(
         child: TextField(
+          controller: _searchController, // Utiliser le TextEditingController
+ onChanged: (value) {
+  // Filtrer les données du flux en fonction du texte de recherche
+  setState(() {
+    _stream = _reference.where('title', isGreaterThanOrEqualTo: value).snapshots();
+  });
+},
           decoration: InputDecoration(
             hintText: 'Rechercher',
             prefixIcon: Icon(Icons.search),
