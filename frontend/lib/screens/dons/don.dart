@@ -1,6 +1,5 @@
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/screens/dons/don_list.dart';
-import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +15,7 @@ class DonPage extends StatefulWidget {
 }
 class _DonPageState extends State<DonPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-   final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
  final _descriptionController = TextEditingController();
  final _categorieController=TextEditingController();
@@ -52,7 +51,6 @@ class _DonPageState extends State<DonPage> {
         _isLoading = true;
       });
       final title = _titleController.text.trim();
-       
        final description = _descriptionController.text.trim();
         final etat = selectedEtat;
       final categorie=selectedCategorie;
@@ -72,21 +70,18 @@ class _DonPageState extends State<DonPage> {
         'image': imageDownloadUrl,
         'createdAt': FieldValue.serverTimestamp(),
         'favourites':[],
-        'userId':userId,
-        'userName':userName,
       });
       setState(() {
         _isLoading = false;
       });
       Navigator.push(context,
-    MaterialPageRoute(builder: (context) => HomePage()),
-    
+    MaterialPageRoute(builder: (context) => DonList()),
       );
                ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       backgroundColor: Colors.green,
       content: Text(
-        'Don ajouté avec succés',
+        'Don ajouté',
         style: TextStyle(color: Colors.white),
       ),
     ),
@@ -482,7 +477,15 @@ class _DonPageState extends State<DonPage> {
             
             isCompleted = true;
           });
- 
+          ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: Colors.green,
+      content: Text(
+        'Don ajouté',
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
+  );
         }else{
           setState(() {
             _activeStepIndex += 1;
@@ -520,7 +523,7 @@ controlsBuilder: (context, details,{onStepContinue, onStepCancel}) {
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10),
     ),
-  ),
+            ),
                    onPressed:_isLoading ? null :details.onStepContinue,
             child:
             _isLoading

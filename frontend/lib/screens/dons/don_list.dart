@@ -26,7 +26,7 @@ class _DonListState extends State<DonList> {
   late Future<QuerySnapshot> donations;
 
   @override
-  void  initState(){
+  void initState(){
     super.initState;
      
    _stream = _reference.where('userId', isEqualTo: userId).snapshots();

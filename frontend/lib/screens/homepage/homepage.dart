@@ -15,6 +15,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../main.dart';
+
 //import '../dons/don_details.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,17 +26,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
- 
- final db = FirebaseFirestore.instance;
+   TextEditingController _searchController = TextEditingController();
+  
+  final db = FirebaseFirestore.instance;
   late String id;
   late Stream<QuerySnapshot> _stream;
   CollectionReference _reference = FirebaseFirestore.instance.collection('dons');
   @override
-  void  initState() {
+  void  initState(){
     super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _reference.snapshots();
-     _stream = _reference.orderBy('createdAt', descending: true).snapshots();
+    _stream = _reference.orderBy('createdAt', descending: true).snapshots();
   }
 final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
@@ -53,6 +56,7 @@ final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
     void initState(){
 getDocId();
+ TextEditingController _searchController = TextEditingController();
 super.initState;
     }
     
@@ -150,6 +154,13 @@ children: [
     children: [
       Expanded(
         child: TextField(
+          controller: _searchController, // Utiliser le TextEditingController
+ onChanged: (value) {
+  // Filtrer les données du flux en fonction du texte de recherche
+  setState(() {
+    _stream = _reference.where('title', isGreaterThanOrEqualTo: value).snapshots();
+  });
+},
           decoration: InputDecoration(
             hintText: 'Rechercher',
             prefixIcon: Icon(Icons.search),
