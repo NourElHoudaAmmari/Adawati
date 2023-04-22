@@ -3,9 +3,12 @@ import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/models/demande_model.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
+import 'package:adawati/screens/demande/EditDemandeScreen.dart';
 import 'package:adawati/screens/demande/form_edit.dart';
+import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 class DemandeScreen extends StatefulWidget {
@@ -16,7 +19,15 @@ class DemandeScreen extends StatefulWidget {
 }
 
 class _DemandeScreenState extends State<DemandeScreen> {
- final CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
+CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
+   final userId = FirebaseAuth.instance.currentUser!.uid;
+   late Future<QuerySnapshot> demande;
+   late Stream<QuerySnapshot> _stream;
+   @override
+  void initState() {
+    super.initState();
+     _stream = _demande.where('userId', isEqualTo: userId).snapshots();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +35,7 @@ class _DemandeScreenState extends State<DemandeScreen> {
          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed:(){
+          _onButtomPressed();
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF5C6BC0),
@@ -101,7 +113,7 @@ children: [
               Container(
                 height: 500,
                 child: StreamBuilder<QuerySnapshot>(
-                       stream: _demande.snapshots(),
+                       stream: _stream,
                          builder: (context, AsyncSnapshot  snapshots) {
                   if (snapshots.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -109,8 +121,12 @@ children: [
                     );
                   }
                   if (snapshots.hasData) {
+                      List<QueryDocumentSnapshot> documents = snapshots.data.docs.where((doc) => doc['userId'] == userId).toList();
+                               List<Map> items =
+        documents.map((e) => e.data() as Map).toList();
+                         
                     return ListView.builder(
-                    itemCount: snapshots.data!.docs.length,
+                    itemCount: items.length,
                        itemBuilder: (context, index) {
                        final DocumentSnapshot records = snapshots.data!.docs[index];
                        return Padding(
@@ -120,33 +136,64 @@ children: [
                              motion: StretchMotion(),
                                 children: [
                                   SlidableAction(
-                                    onPressed: (context){
-                                      final demande = DemandeModel(
-                                        id:records.id,
-                                        description: records["description"],
-                                      );
-                                       Navigator.push(context, 
-                              MaterialPageRoute(
-                                builder:((context)=>AddEditDemande(
-                                  demande: demande,index: index,
-                                ))));
-                                         },
-                                    icon: Icons.edit_note,
-                                    backgroundColor: Colors.green,
-                                    )
+                                      onPressed: (context) async {
+          // récupère la demande à modifier
+          final DocumentSnapshot demande =
+              snapshots.data!.docs[index];
+          // ouvre l'écran de modification de demande
+          final updatedDemande = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  EditDemandeScreen(demande: demande),
+            ),
+          );
+          // met à jour la demande
+          if (updatedDemande != null) {
+            await DemandeController()
+                .update_demande(updatedDemande);
+          }
+        },
+        icon: Icons.edit_note,
+        backgroundColor: Colors.green,
+      ),
                                 ],
                                      ),
                                      endActionPane: ActionPane(
                                       motion: StretchMotion(),
                                       children: [
                                         
-                                  SlidableAction(
-                                    onPressed: (context){
-                                      DemandeController().delete_demande(DemandeModel(id: records.id));
-                                    },
-                                    icon: Icons.delete_outline,
-                                    backgroundColor: Colors.red,
-                                    )
+                               SlidableAction(
+  onPressed: (context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Supprimer la demande"),
+          content: Text("Voulez-vous vraiment supprimer cette demande?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Non'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Oui'),
+              onPressed: () {
+                DemandeController().delete_demande(DemandeModel(id: records.id));
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  },
+  icon: Icons.delete_outline,
+  backgroundColor: Colors.red,
+),
+
                                       ]),
                               child: ListTile(
                                 tileColor: Colors.grey[200],
@@ -173,4 +220,56 @@ children: [
       ),
     );
   }
+  void _onButtomPressed(){
+      showModalBottomSheet(
+     
+        context: context, 
+        builder: (context) {
+          return Container(
+            color: Color(0xFF737373),
+            height: 180,
+            child:Container(
+            child: _buildBottomNavigationMenu(),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(10),
+                topRight: const Radius.circular(10),
+              ),
+            ),
+            ),
+          );
+          
+        }); 
+     }
+     
+     Column _buildBottomNavigationMenu (){
+      return Column(
+          children:<Widget> [
+ListTile(
+leading: Icon(Icons.post_add,color: kontColor),
+title: Text('Ajouter un don',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+ onTap: ()=>{ Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>DonPage()),
+  )
+},
+ tileColor: Colors.amber[50],
+),
+ Divider(thickness: 3,),
+ ListTile(
+ 
+     leading: Icon(Icons.add_task,color: kPrimaryColor,),
+     
+     title: Text('Ajouter une demande',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+     onTap: ()=>{ Navigator.push(context,
+    MaterialPageRoute(builder: (context) => AddEditDemande()),
+  )},
+  tileColor: Colors.amber[50],
+   ),
+
+          ],
+        );
+      }
+
 }

@@ -85,7 +85,11 @@ children: [
    
    ),
    IconButton(
-    onPressed: (){},
+    onPressed: (){
+         Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Favoirs()),
+      );
+    },
     icon: const Icon(Icons.favorite_border_outlined),
     ),
     const SizedBox(width: 24),
@@ -158,7 +162,7 @@ children: [
       IconButton(
         onPressed: () {},
         icon: Icon(Icons.filter_list,
-        color: Colors.red,),
+        color: Colors.deepOrange,),
       ),
     ],
   ),

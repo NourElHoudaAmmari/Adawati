@@ -20,6 +20,7 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
+   final user =FirebaseAuth.instance.currentUser;
     final CollectionReference usersRef =
       FirebaseFirestore.instance.collection("users");
      String name = '';
@@ -38,7 +39,7 @@ class _MainDrawerState extends State<MainDrawer> {
     if (userData != null) {
       setState(() {
         name = userData['name'];
-        email = userData['email'];
+       // email = userData['email'];
       });
     }
   }
@@ -78,7 +79,7 @@ Container(
  fontWeight: FontWeight.bold,),
     ),
  Text(  
-   email,
+ (user?.email ?? ''),
    style: TextStyle(
     color: Colors.white,
    fontWeight: FontWeight.normal,),

@@ -1,12 +1,17 @@
 
 import 'package:adawati/helpers/constants.dart';
+import 'package:adawati/screens/Profile/profile.dart';
+import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/dons/don_details.dart';
+import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DonList extends StatefulWidget {
-  DonList({Key? key}) : super(key: key) ;
+    final User? user; 
+  DonList({Key? key, this.user}) : super(key: key) ;
   @override
   State<DonList> createState() => _DonListState();
 }
@@ -14,33 +19,83 @@ class DonList extends StatefulWidget {
 class _DonListState extends State<DonList> {
   final db = FirebaseFirestore.instance;
   late String id;
+   String?  donID;
   late Stream<QuerySnapshot> _stream;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
   CollectionReference _reference = FirebaseFirestore.instance.collection('dons');
+  late Future<QuerySnapshot> donations;
 
   @override
   void  initState(){
     super.initState;
-       _stream = _reference.snapshots();
+     
+   _stream = _reference.where('userId', isEqualTo: userId).snapshots();
   }
-  void deleteData(DocumentSnapshot doc)async{
-  
-  }
+   Future<void> deletedon(String donID) => _reference.doc(donID).delete();
+
 final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed:(){
+          _onButtomPressed();
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xFF5C6BC0),
+        foregroundColor: Colors.white,
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        color: Color(0xFF5C6BC0),
+        child: IconTheme(
+          data: IconThemeData(color: Colors.grey[100]),
+         child: Padding(padding: const EdgeInsets.all(12.0),
+         child: Row(
+mainAxisAlignment: MainAxisAlignment.spaceAround,
+children: [
+  IconButton(
+    
+    onPressed:(){
+      Navigator.push(context,
+    MaterialPageRoute(builder: (context) => HomePage()),
+  );
+    },
+   icon: const Icon(Icons.home),
+   ),
+   IconButton(
+    onPressed: (){},
+    icon: const Icon(Icons.favorite_border_outlined),
+    ),
+    const SizedBox(width: 24),
+     IconButton(
+      onPressed: (){},
+    icon: const Icon(Icons.chat),
+    ),
+     IconButton(onPressed: (){
+      Navigator.push(context,
+    MaterialPageRoute(builder: (context) => ProfileScreen()),
+  );
+     },
+    icon: const Icon(Icons.person),
+    ),
+
+],
+         ),
+         ),
+         )
+      ),
       appBar: AppBar(
         title: Text('Liste des dons'),
         elevation: 0.0,
         backgroundColor: kontColor,
          leading: IconButton(
-          icon: Icon(
-            Icons.menu,
-            color: Color.fromARGB(255, 103, 103, 103),
-          ),
-          onPressed: () {
-            _key.currentState?.openDrawer();
-          },
+            icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ), onPressed: () {    Navigator.of(context).pop();
+            },
         ),
         actions: <Widget>[
           IconButton(
@@ -65,11 +120,19 @@ final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
           if (snapshot.hasData) {
             //get the data
             QuerySnapshot querySnapshot = snapshot.data!;
-            List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+           // List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+            List<QueryDocumentSnapshot> documents = snapshot.data.docs.where((doc) => doc['userId'] == userId).toList();
 
             //Convert the documents to Maps
-            List<Map> items =
-                documents.map((e) => e.data() as Map).toList();
+   List<Map> items = documents.map((e) => {
+                    'id':e.id,
+                    'title':e['title'],
+                     'image':e['image'],
+                      'description':e['description'],
+                     'adresse':e['adresse'],
+                      'createdAt':e['createdAt'],
+                  }).toList();
+
 
             //Display the grid
            return GridView.builder(
@@ -114,8 +177,11 @@ final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
                     ),
                     subtitle: Text(
                       '${thisItem['description']}',
+                       maxLines: 1,
+      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.grey,
+                        fontSize: 13,
                       ),
                     ),
                    onTap: () {Navigator.push(
@@ -139,14 +205,18 @@ final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
                               Icons.edit,
                               color: Colors.blue,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              
+                            },
                           ),
                           IconButton(
                             icon: Icon(
                               Icons.delete,
                               color: Colors.redAccent,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              deletedon(donID!);
+                            },
                           ),
                         ],
                       ),
@@ -164,7 +234,7 @@ final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
     return Center(child: CircularProgressIndicator());
   },
 ),
-floatingActionButton: FloatingActionButton(
+/*floatingActionButton: FloatingActionButton(
   onPressed: () {
     Navigator.push(
       context,
@@ -173,7 +243,58 @@ floatingActionButton: FloatingActionButton(
   },
   tooltip: 'Add',
   child: const Icon(Icons.add),
-),
+),*/
 );
 }
+  void _onButtomPressed(){
+      showModalBottomSheet(
+     
+        context: context, 
+        builder: (context) {
+          return Container(
+            color: Color(0xFF737373),
+            height: 180,
+            child:Container(
+            child: _buildBottomNavigationMenu(),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(10),
+                topRight: const Radius.circular(10),
+              ),
+            ),
+            ),
+          );
+          
+        }); 
+     }
+     
+     Column _buildBottomNavigationMenu (){
+      return Column(
+          children:<Widget> [
+ListTile(
+leading: Icon(Icons.post_add,color: kontColor),
+title: Text('Ajouter un don',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+ onTap: ()=>{ Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>DonPage()),
+  )
+},
+ tileColor: Colors.amber[50],
+),
+ Divider(thickness: 3,),
+ ListTile(
+ 
+     leading: Icon(Icons.add_task,color: kPrimaryColor,),
+     
+     title: Text('Ajouter une demande',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+     onTap: ()=>{ Navigator.push(context,
+    MaterialPageRoute(builder: (context) => AddEditDemande()),
+  )},
+  tileColor: Colors.amber[50],
+   ),
+
+          ],
+        );
+      }
 }

@@ -1,3 +1,4 @@
+import 'package:adawati/providers/dons_provider.dart';
 import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../../helpers/constants.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,10 +15,11 @@ class DonDetails extends StatefulWidget {
  DonDetails(this.itemId,{Key? key}) : super(key: key) {
   _reference = FirebaseFirestore.instance.collection('dons').doc(itemId);
   _futureData = _reference.get();
-  WhishListService _service = WhishListService();
-    
+
+      WhishListService _service = WhishListService();
  }
    String? itemId;
+   
   late DocumentReference _reference;
   late Future<DocumentSnapshot> _futureData;
 
@@ -25,13 +28,46 @@ class DonDetails extends StatefulWidget {
 }
 
 class _DonDetailsState extends State<DonDetails> {
-  
+  late WhishListService _service;
+   List fav = [];
 bool _isLiked = false;
   late Map data;
-  late String? id;
+
+ @override
+ void initState(){
+   super.initState();
+    _service = WhishListService();
+  getFavourites();
+ 
+ }
+
+  getFavourites(){
+     _service.dons.doc(widget._reference.id).get().then((value){
+      if(mounted){
+setState(() {
+  fav = value['favourites'];  
+});
+      }
+if(fav.contains(_service.user!.uid)){
+  if(mounted){
+  setState(() {
+    _isLiked =true;
+  });
+  }
+}else{
+  if(mounted){
+  setState(() {
+    _isLiked=false;
+  });
+  }
+}
+
+     });
+  }
 
   @override
   Widget build(BuildContext context) {
+ 
     return Scaffold(
       appBar: AppBar(
       title: Text(
@@ -83,7 +119,7 @@ bool _isLiked = false;
             //Get the data
             DocumentSnapshot documentSnapshot = snapshot.data;
             data = documentSnapshot.data() as Map;
-              id = data['id'];
+             
             //display the data
            return Padding(
              padding: const EdgeInsets.only(left: 20.0),
@@ -135,8 +171,9 @@ Row(
         setState(() {
           _isLiked = !_isLiked;
         });
-        WhishListService().updateFavourite(context, _isLiked, data['id']);
-        print(data);
+    WhishListService().updateFavourite(context, _isLiked, widget.itemId);
+    print(widget.itemId);
+       
 
         
       },

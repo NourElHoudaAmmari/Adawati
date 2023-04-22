@@ -59,8 +59,10 @@ class _DonPageState extends State<DonPage> {
            final adresse = _adresseController.text.trim();
             final phone = _phoneController.text.trim();
       final imageDownloadUrl = await _uploadImageToStorage(_imageFile!);
+      final user =FirebaseAuth.instance.currentUser;
+      final userId = user!= null? user.uid :null;
+         String? userName = user?.displayName;
       await FirebaseFirestore.instance.collection('dons').add({
-       
         'title': title,
        'description':description,
        'categorie':categorie,
@@ -70,6 +72,8 @@ class _DonPageState extends State<DonPage> {
         'image': imageDownloadUrl,
         'createdAt': FieldValue.serverTimestamp(),
         'favourites':[],
+        'userId':userId,
+        'userName':userName,
       });
       setState(() {
         _isLoading = false;
@@ -82,7 +86,7 @@ class _DonPageState extends State<DonPage> {
     SnackBar(
       backgroundColor: Colors.green,
       content: Text(
-        'Don ajouté',
+        'Don ajouté avec succés',
         style: TextStyle(color: Colors.white),
       ),
     ),

@@ -3,7 +3,9 @@ import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/models/demande_model.dart';
 import 'package:adawati/screens/demande/demande_screen.dart';
 import 'package:adawati/screens/demande/form_edit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_helpers/firebase_helpers.dart';
 
 class MyPopup extends StatelessWidget {
   const MyPopup({Key? key}) : super(key: key);
@@ -34,6 +36,9 @@ class _AddEditDemandeState extends State<AddEditDemande> {
   bool isedit = false;
   final TextEditingController description = TextEditingController();
   final TextEditingController id = TextEditingController();
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+     String? userId;
+  String? userName;
 
 
   @override
@@ -110,29 +115,40 @@ class _AddEditDemandeState extends State<AddEditDemande> {
                 style: ElevatedButton.styleFrom(
     backgroundColor: kontColor ,
   ),
-                    onPressed: () {
-                     
-                      if (_form_Key.currentState!.validate()) {
-                        _form_Key.currentState!.save();
-                        if(isedit == true){
-                          DemandeController().update_demande(DemandeModel(
-                            id : id.text,
-                            description: description.text));
-                        }
-                           else{
-                           DemandeController().add_demande(DemandeModel(
-                            description: description.text)
-              
-                           );
-                        }
-                       Navigator.push(context, 
-                       MaterialPageRoute(builder: (context)=>DemandeScreen()));
-                      }
-                    
-                    },
+                onPressed: () async {
+  if (_form_Key.currentState!.validate()) {
+    _form_Key.currentState!.save();
+     final user =FirebaseAuth.instance.currentUser;
+           final userId = user!= null? user.uid :null;
+         String? userName = user!=null?user.displayName :null;
+    if (isedit == true) {
+      DemandeController().update_demande(DemandeModel(
+        id: id.text,
+        description: description.text,
+        userId: userId,
+        userName: userName,
+      ));
+    } else {
+      DemandeController().add_demande(DemandeModel(
+        description: description.text,
+        userId: userId,
+        userName: userName,
+      ));
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DemandeScreen()),
+    );
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Demande effectuée avec succès!'),
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.green,
+    ));
+  }
+},
                     child: isedit == true ?  Text("Modifier",style: TextStyle(fontSize: 20)) : Text("Publier",style: TextStyle(fontSize: 20))
                   
-                    )
+                    ),
               )
             ],
           ),

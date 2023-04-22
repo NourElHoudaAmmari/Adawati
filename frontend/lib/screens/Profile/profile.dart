@@ -10,37 +10,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final user =FirebaseAuth.instance.currentUser;
+  
    final CollectionReference usersRef =
       FirebaseFirestore.instance.collection("users");
      String name = '';
-     String email ='';
+    // String email ='';
 
-  @override
-  void  initState() {
-    super.initState;
-    fetchUserData();
-  }
+ @override
+void initState() {
+  super.initState();
+  fetchUserData();
+}
 
-  void fetchUserData() async {
+void fetchUserData() async {
   User? currentUser = FirebaseAuth.instance.currentUser;
   if (currentUser != null) {
     DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
-    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+    Map<String, dynamic>? userData =
+        userDoc.data() as Map<String, dynamic>?;
     if (userData != null) {
       setState(() {
         name = userData['name'];
-        email = userData['email'];
       });
     }
   }
 }
+
   @override
   Widget build(BuildContext context) {
    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -75,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Container(
                      width: 35,
                      height: 35,
-                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.grey),
+                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.grey),
                     
                      ),
                   ),
@@ -83,11 +86,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 10,),
    Text(
-                name,
+            name,
                 style: TextStyle(fontSize: 20,color: kPrimaryColor,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold)
               ),
               Text(
-                email,
+               (user?.email ?? ''),
                 style: TextStyle(fontSize: 16,color: kontColor,fontStyle: FontStyle.normal),
               ),
               const SizedBox(height: 25),
