@@ -26,7 +26,7 @@ class _MainDrawerState extends State<MainDrawer> {
      String name = '';
      String email ='';
        @override
-  void  initState() {
+  void get initState {
     super.initState;
     fetchUserData();
   }

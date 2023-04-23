@@ -11,32 +11,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-class DemandeScreen extends StatefulWidget {
-  const DemandeScreen({super.key});
+
+class Demande extends StatefulWidget {
+  const Demande({super.key});
 
   @override
-  State<DemandeScreen> createState() => _DemandeScreenState();
+  State<Demande> createState() => _DemandeState();
 }
 
-class _DemandeScreenState extends State<DemandeScreen> {
-CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
-   final userId = FirebaseAuth.instance.currentUser!.uid;
-   late Future<QuerySnapshot> demande;
-   late Stream<QuerySnapshot> _stream;
-   @override
-  void get  initState {
-    super.initState;
-     _stream = _demande.where('userId', isEqualTo: userId).snapshots();
-  }
+class _DemandeState extends State<Demande> {
+ final CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed:(){
-          _onButtomPressed();
-        },
+        onPressed:() =>_onButtomPressed(),
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF5C6BC0),
         foregroundColor: Colors.white,
@@ -69,9 +62,6 @@ children: [
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
-      Navigator.push(context,
-    MaterialPageRoute(builder: (context) => ProfileScreen()),
-  );
      },
     icon: const Icon(Icons.person),
     ),
@@ -93,7 +83,8 @@ children: [
           icon: Icon(
             Icons.arrow_back,
             color: Colors.white,
-          ), onPressed: () {  Navigator.of(context).pop();},
+          ), onPressed: () {  Navigator.push(context, 
+            MaterialPageRoute(builder: (context)=>HomePage()));},
         ),actions: <Widget>[
           IconButton(
               icon: Icon(
@@ -109,11 +100,11 @@ children: [
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 35,),
+              SizedBox(height: 10,),
               Container(
                 height: 500,
                 child: StreamBuilder<QuerySnapshot>(
-                       stream: _stream,
+                       stream: _demande.snapshots(),
                          builder: (context, AsyncSnapshot  snapshots) {
                   if (snapshots.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -121,80 +112,15 @@ children: [
                     );
                   }
                   if (snapshots.hasData) {
-                      List<QueryDocumentSnapshot> documents = snapshots.data.docs.where((doc) => doc['userId'] == userId).toList();
-                               List<Map> items =
-        documents.map((e) => e.data() as Map).toList();
-                         
                     return ListView.builder(
-                    itemCount: items.length,
+                    itemCount: snapshots.data!.docs.length,
                        itemBuilder: (context, index) {
                        final DocumentSnapshot records = snapshots.data!.docs[index];
                        return Padding(
                          padding: const EdgeInsets.symmetric(vertical: 10),
                          child: Slidable(
-                           startActionPane: ActionPane(
-                             motion: StretchMotion(),
-                                children: [
-                                  SlidableAction(
-                                      onPressed: (context) async {
-          // récupère la demande à modifier
-          final DocumentSnapshot demande =
-              snapshots.data!.docs[index];
-          // ouvre l'écran de modification de demande
-          final updatedDemande = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  EditDemandeScreen(demande: demande),
-            ),
-          );
-          // met à jour la demande
-          if (updatedDemande != null) {
-            await DemandeController()
-                .update_demande(updatedDemande);
-          }
-        },
-        icon: Icons.edit_note,
-        backgroundColor: Colors.green,
-      ),
-                                ],
-                                     ),
-                                     endActionPane: ActionPane(
-                                      motion: StretchMotion(),
-                                      children: [
-                                        
-                               SlidableAction(
-  onPressed: (context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Supprimer la demande"),
-          content: Text("Voulez-vous vraiment supprimer cette demande?"),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Non'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Oui'),
-              onPressed: () {
-                DemandeController().delete_demande(DemandeModel(id: records.id));
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  },
-  icon: Icons.delete_outline,
-  backgroundColor: Colors.red,
-),
-
-                                      ]),
+                          
+                                  
                               child: ListTile(
                                 tileColor: Colors.grey[200],
                                 title: Text(records["description"]),
@@ -220,7 +146,7 @@ children: [
       ),
     );
   }
-  void _onButtomPressed(){
+void _onButtomPressed(){
       showModalBottomSheet(
      
         context: context, 
@@ -231,7 +157,7 @@ children: [
             child:Container(
             child: _buildBottomNavigationMenu(),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).canvasColor,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(10),
                 topRight: const Radius.circular(10),
@@ -247,29 +173,28 @@ children: [
       return Column(
           children:<Widget> [
 ListTile(
-leading: Icon(Icons.post_add,color: kontColor),
-title: Text('Ajouter un don',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+leading: Icon(Icons.post_add),
+title: Text('Ajouter un don'),
  onTap: ()=>{ Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) =>DonPage()),
+    MaterialPageRoute(builder: (context) => DonPage()),
   )
 },
- tileColor: Colors.amber[50],
 ),
- Divider(thickness: 3,),
+ Divider(thickness: 2,),
  ListTile(
- 
-     leading: Icon(Icons.add_task,color: kPrimaryColor,),
-     
-     title: Text('Ajouter une demande',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
+     leading: Icon(Icons.add_task),
+     title: Text('Ajouter une demande'),
      onTap: ()=>{ Navigator.push(context,
     MaterialPageRoute(builder: (context) => AddEditDemande()),
   )},
-  tileColor: Colors.amber[50],
    ),
 
           ],
         );
       }
-
 }
+
+
+     
+

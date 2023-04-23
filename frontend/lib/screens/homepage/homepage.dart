@@ -1,6 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, avoid_returning_null_for_void, must_be_immutable, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/repository/authentification_repository.dart';
+import 'package:adawati/screens/demande/demande_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore_extended; // Alias pour éviter les conflits de noms
+
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
@@ -16,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../main.dart';
+import '../demande/demande.dart';
 
 //import '../dons/don_details.dart';
 
@@ -32,11 +37,16 @@ class _HomePageState extends State<HomePage> {
   late String id;
   late Stream<QuerySnapshot> _stream;
   CollectionReference _reference = FirebaseFirestore.instance.collection('dons');
+    List<String> docIDs = [];
+  bool _isSearching = false; // Added flag to track searching status
+  late String _searchCategory = ''; // Added variable to store search category
+  late String _searchTitle = '';
   @override
-  void  initState(){
+  void get initState{
     super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _reference.snapshots();
+    
     _stream = _reference.orderBy('createdAt', descending: true).snapshots();
   }
 final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
@@ -152,31 +162,78 @@ children: [
   padding: const EdgeInsets.all(8.0),
   child: Row(
     children: [
-      Expanded(
-        child: TextField(
-          controller: _searchController, // Utiliser le TextEditingController
- onChanged: (value) {
-  // Filtrer les données du flux en fonction du texte de recherche
-  setState(() {
-    _stream = _reference.where('title', isGreaterThanOrEqualTo: value).snapshots();
-  });
-},
-          decoration: InputDecoration(
-            hintText: 'Rechercher',
-            prefixIcon: Icon(Icons.search),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-          ),
-        ),
+  Expanded(
+  child: TextField(
+   // controller: _searchController,
+    onChanged: (value) {
+      setState(() {
+        _stream = _reference
+        .where('categorie', isEqualTo: value)
+        .snapshots();
+       //_stream = _reference.where('title', isEqualTo: value).snapshots();
+      });
+    },
+    decoration: InputDecoration(
+      hintText: 'Rechercher',
+      prefixIcon: Icon(Icons.search),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
       ),
-      IconButton(
+    ),
+  ),
+),
+
+
+  IconButton(
         onPressed: () {},
         icon: Icon(Icons.filter_list,
         color: Colors.deepOrange,),
       ),
     ],
+    
   ),
+  
+),
+
+Row(
+  children: [
+    TextButton(
+                  onPressed: () {
+    Navigator.push(
+                        context,
+                       MaterialPageRoute(
+                       builder: (context) =>HomePage()),
+                        );                // Add your onPressed logic here
+                  },
+                  child: Text(
+                    'Dons',
+                    style: TextStyle(color: Colors.deepOrange[800], fontWeight: FontWeight.bold),
+                  ),
+                ),
+        TextButton(
+    
+                      onPressed: () {
+    Navigator.push(
+                        context,
+                       MaterialPageRoute(
+                       builder: (context) =>Demande()),
+                        );
+                       // Naviguer vers la page souhaitée
+                            },
+                        // Add your onPressed logic here
+    
+                   
+    
+                      child: Text(
+    
+                        'Demandes',
+    
+                        style: TextStyle(color: kontColor, fontWeight: FontWeight.bold),
+    
+                      ),
+    
+                    ),
+  ],
 ),
 
           
