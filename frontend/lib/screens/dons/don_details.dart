@@ -311,15 +311,34 @@ Row(
   ],
                          ),
                          SizedBox(height: 12,),
-                                       Container(
-                  decoration: BoxDecoration(border:Border.all(color: Colors.white),borderRadius: BorderRadius.circular(8)  ),
-     
-      child: new Row(
-       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Container(
+  decoration: BoxDecoration(
+    border: Border.all(color: Colors.white),
+    borderRadius: BorderRadius.circular(8),
+  ),
+  child: Row(
+    children: <Widget>[
+      SizedBox(width: 5),
+      CircleAvatar(
+        backgroundImage: AssetImage('assets/images/profile_pic.png'),
+        radius: 25,
+      ),
+      SizedBox(width: 10),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(width: 49,),
-        InkWell(
-  onTap: ()async {
+          Text(
+            '${data['userName']}',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(width: 35),
+      InkWell(
+        onTap: ()async {
 final Uri url=Uri(scheme: 'tel',
 path:'${data['phone']}' );
 if(await canLaunchUrl(url)){
@@ -328,26 +347,27 @@ if(await canLaunchUrl(url)){
   print('cannot launch this url');
 }
   },
-  child: IconoMenu(
-    icon: Icons.call,
-    label: "Appel",
-  ),
-),
-SizedBox(width:180,),
-
-        InkWell(
-  onTap: () {
-    // Ajoutez ici la logique qui doit être exécutée lors du clic sur l'icône
-  },
-  child: IconoMenu(
-    icon: Icons.message,
-    label: "Message",
-  ),
-),
-        ],
+        child: IconoMenu(
+          icon: Icons.call,
+          label: "Appel",
+        ),
       ),
-      
-    ),
+      SizedBox(width: 12),
+      InkWell(
+        onTap: () {
+          // Ajoutez ici la logique qui doit être exécutée lors du clic sur l'icône
+        },
+        child: IconoMenu(
+
+          icon: Icons.message,
+          
+          label: "Message",
+        ),
+      ),
+    ],
+  ),
+),
+
                ],
              ),
            ),
