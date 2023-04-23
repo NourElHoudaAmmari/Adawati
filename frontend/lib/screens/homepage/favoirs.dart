@@ -20,8 +20,8 @@ class Favoirs extends StatefulWidget {
 class _FavoirsState extends State<Favoirs> {
     late WhishListService _service;
      @override
- void initState(){
-   super.initState();
+ void get initState{
+   super.initState;
     _service = WhishListService();
  
  }
@@ -191,7 +191,7 @@ children: [
             ],
           ),
           const SizedBox(
-            height: 5.0,
+            height: 3.0,
           ),
           Row(
             children: [

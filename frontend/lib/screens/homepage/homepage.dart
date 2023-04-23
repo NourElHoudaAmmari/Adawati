@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   late Stream<QuerySnapshot> _stream;
   CollectionReference _reference = FirebaseFirestore.instance.collection('dons');
   @override
-  void  initState(){
+  void get initState{
     super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _reference.snapshots();
@@ -156,9 +156,10 @@ children: [
         child: TextField(
           controller: _searchController, // Utiliser le TextEditingController
  onChanged: (value) {
+  
   // Filtrer les données du flux en fonction du texte de recherche
   setState(() {
-    _stream = _reference.where('title', isGreaterThanOrEqualTo: value).snapshots();
+    _stream = _reference.where('title', isEqualTo: value).snapshots();
   });
 },
           decoration: InputDecoration(
