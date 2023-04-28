@@ -59,7 +59,7 @@ class _DonPageState extends State<DonPage> {
       final imageDownloadUrl = await _uploadImageToStorage(_imageFile!);
       final user =FirebaseAuth.instance.currentUser;
       final userId = user!= null? user.uid :null;
-         String? userName = user?.displayName;
+         String? userName = user?.email;
       await FirebaseFirestore.instance.collection('dons').add({
         'title': title,
        'description':description,
