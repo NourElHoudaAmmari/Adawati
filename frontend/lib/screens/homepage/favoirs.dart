@@ -88,7 +88,7 @@ children: [
           style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),
         ),
         elevation: 0.0,
-        backgroundColor:kPrimaryColor,
+        backgroundColor:kontColor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -105,6 +105,7 @@ children: [
         ],
       
       ),
+      
      body: StreamBuilder<QuerySnapshot>(
         stream: _service.dons.where('favourites',arrayContains: _service.user!.uid).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -119,6 +120,7 @@ children: [
               child: Text('Aucun élément enregistré dans les favoris.'),
             );
           }
+          SizedBox(height: 35);
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
