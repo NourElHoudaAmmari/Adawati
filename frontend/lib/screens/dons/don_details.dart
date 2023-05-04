@@ -1,5 +1,6 @@
 import 'package:adawati/providers/dons_provider.dart';
 import 'package:adawati/screens/dons/don_list.dart';
+import 'package:adawati/screens/homepage/chat.dart';
 import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -355,7 +356,9 @@ if(await canLaunchUrl(url)){
       SizedBox(width: 12),
       InkWell(
         onTap: () {
-          // Ajoutez ici la logique qui doit être exécutée lors du clic sur l'icône
+             Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Chat()),
+  );
         },
         child: IconoMenu(
 

@@ -25,6 +25,7 @@ class SignUpForm extends StatefulWidget {
   _SignUpFormState createState()=> _SignUpFormState();
 }
 class _SignUpFormState extends State<SignUpForm>{
+  final auth = FirebaseAuth.instance;
   @override
   void dispose(){
     emailController.dispose();
@@ -33,12 +34,13 @@ class _SignUpFormState extends State<SignUpForm>{
     phoneController.dispose();
     super.dispose();
   }
-  Future addUserDetails(String name,String email,String phone,String password)async{
+  Future addUserDetails(String name,String email,String phone,String password,String uid)async{
     await FirebaseFirestore.instance.collection('users').add({
         'name':name,
         'email':email,
         'phone':phone,
         'password':password,
+        'uid':auth.currentUser!.uid,
     });
 
   }
@@ -46,6 +48,7 @@ class _SignUpFormState extends State<SignUpForm>{
     String email = "";
     String phoneNumber="";
     String password = "";
+     String uid = "";
  TextEditingController emailController = TextEditingController();
  TextEditingController passwordController = TextEditingController();
    TextEditingController nameController = TextEditingController();
@@ -204,6 +207,7 @@ controller: passwordController,
               FirebaseAuth.instance.createUserWithEmailAndPassword(
                 email: emailController.text,
                  password: passwordController.text,
+             
                  ).then((value) {
                   Fluttertoast.showToast(
   msg: "Compte créer avec succés",
@@ -230,6 +234,8 @@ MaterialPageRoute(builder: (context)=>LoginScreen()));
                  emailController.text.trim(),
                 phoneController.text.trim(),
                  passwordController.text.trim(),
+                 uid
+                   
                     );
             
       /*  if(validateAndSave()){

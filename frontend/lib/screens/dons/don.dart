@@ -402,6 +402,7 @@ class _DonPageState extends State<DonPage> {
     ),
     SizedBox(height: 10,),
  TextFormField(
+   keyboardType: TextInputType.number,
     maxLength: 8,
   controller: _phoneController,
   decoration: InputDecoration(
