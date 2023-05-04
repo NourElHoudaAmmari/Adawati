@@ -60,11 +60,6 @@ class _DonPageState extends State<DonPage> {
       final user =FirebaseAuth.instance.currentUser;
        final userId = user!= null? user.uid :null;
          String? userName = user!=null?user.email :null;
-     // final userId = user?.uid ;
-       //  String? userName = user?.email;
-         // Générer un ID unique pour le don
-           //String? userId;
-  //String? userName;
     String donId = FirebaseFirestore.instance.collection('dons').doc().id;
 
     await FirebaseFirestore.instance.collection('dons').doc(donId).set({
