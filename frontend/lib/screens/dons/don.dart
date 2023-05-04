@@ -58,9 +58,19 @@ class _DonPageState extends State<DonPage> {
             final phone = _phoneController.text.trim();
       final imageDownloadUrl = await _uploadImageToStorage(_imageFile!);
       final user =FirebaseAuth.instance.currentUser;
-      final userId = user!= null? user.uid :null;
-         String? userName = user?.email;
-      await FirebaseFirestore.instance.collection('dons').add({
+       final userId = user!= null? user.uid :null;
+         String? userName = user!=null?user.email :null;
+     // final userId = user?.uid ;
+       //  String? userName = user?.email;
+         // Générer un ID unique pour le don
+           //String? userId;
+  //String? userName;
+    String donId = FirebaseFirestore.instance.collection('dons').doc().id;
+
+    await FirebaseFirestore.instance.collection('dons').doc(donId).set({
+      'userId':userId,
+      'userName' :userName,
+      'id': donId, // Ajouter l'ID du don
         'title': title,
        'description':description,
        'categorie':categorie,
@@ -402,6 +412,7 @@ class _DonPageState extends State<DonPage> {
     ),
     SizedBox(height: 10,),
  TextFormField(
+   keyboardType: TextInputType.number,
     maxLength: 8,
   controller: _phoneController,
   decoration: InputDecoration(

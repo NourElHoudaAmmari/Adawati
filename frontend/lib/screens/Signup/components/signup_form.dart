@@ -204,6 +204,7 @@ controller: passwordController,
               FirebaseAuth.instance.createUserWithEmailAndPassword(
                 email: emailController.text,
                  password: passwordController.text,
+                 //name :nameController.text
                  ).then((value) {
                   Fluttertoast.showToast(
   msg: "Compte créer avec succés",
