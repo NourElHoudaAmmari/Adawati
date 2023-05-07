@@ -63,6 +63,7 @@ dependencies:
   url_launcher: ^6.1.10
   intl: ^0.17.0
   firebase_helpers: ^0.6.0
+  file_picker: ^5.2.11
   
 
 

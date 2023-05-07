@@ -3,28 +3,33 @@ import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/dons/don.dart';
-import 'package:adawati/screens/dons/don_details.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'Details.dart';
+import 'editdon.dart';
+
 class DonList extends StatefulWidget {
     final User? user; 
+   
   DonList({Key? key, this.user}) : super(key: key) ;
+   late Map data;
   @override
   State<DonList> createState() => _DonListState();
 }
 
 class _DonListState extends State<DonList> {
   final db = FirebaseFirestore.instance;
+  
   late String id;
    String?  donID;
   late Stream<QuerySnapshot> _stream;
   final userId = FirebaseAuth.instance.currentUser!.uid;
   CollectionReference _reference = FirebaseFirestore.instance.collection('dons');
   late Future<QuerySnapshot> donations;
-
+ late Map data;
   @override
   void get initState{
     super.initState;
@@ -160,7 +165,10 @@ children: [
             icon: Icon(
             Icons.arrow_back,
             color: Colors.white,
-          ), onPressed: () {    Navigator.of(context).pop();
+          ), onPressed: () {    Navigator.push(context,
+    MaterialPageRoute(builder: (context) => HomePage()
+    )
+          );
             },
         ),
         actions: <Widget>[
@@ -229,7 +237,7 @@ children: [
                         ? Image.network('${thisItem['image']}')
                         : Placeholder(),
                     width: 170,
-                    height: 120,
+                    height: 115,
                   ),
                 ),
                 Expanded(
@@ -266,15 +274,21 @@ children: [
                     Container(
                       child: Row(
                         children: <Widget>[
-                          IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.blue,
-                            ),
-                            onPressed: () {
-                              
-                            },
-                          ),
+                         // IconButton(
+                            ///icon: Icon(
+                            //  Icons.edit,
+                           ///   color: Colors.blue,
+                           // ),
+                          //  onPressed: () {
+                            //   Navigator.push(
+                            //  context,
+                            //  MaterialPageRoute(
+                                
+                             //   builder: (context) => EditDon(thisItem),
+                           //   ),
+                          //  );
+                           // },
+                         // ),
                           IconButton(
                             icon: Icon(
                               Icons.delete,
