@@ -155,6 +155,7 @@ if(snapshot.hasData){
                       ),
                        const SizedBox(height:9),
                         TextFormField(
+                           keyboardType: TextInputType.number,
                           controller: phone,
                         decoration: InputDecoration(
                           label: Text("Numero de telephone"),prefixIcon:Icon(CupertinoIcons.phone,color: Colors.blue)),

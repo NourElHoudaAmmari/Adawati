@@ -12,6 +12,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../homepage/favoirs.dart';
+
 class Demande extends StatefulWidget {
   const Demande({super.key});
 
@@ -53,7 +55,11 @@ children: [
    icon: const Icon(Icons.home),
    ),
    IconButton(
-    onPressed: (){},
+    onPressed: (){
+         Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Favoirs()),
+      );
+    },
     icon: const Icon(Icons.favorite_border_outlined),
     ),
     const SizedBox(width: 24),
@@ -62,6 +68,9 @@ children: [
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
+      Navigator.push(context,
+    MaterialPageRoute(builder: (context) => ProfileScreen()),
+      );
      },
     icon: const Icon(Icons.person),
     ),
@@ -157,7 +166,7 @@ void _onButtomPressed(){
             child:Container(
             child: _buildBottomNavigationMenu(),
             decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
+              color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(10),
                 topRight: const Radius.circular(10),
@@ -173,21 +182,25 @@ void _onButtomPressed(){
       return Column(
           children:<Widget> [
 ListTile(
-leading: Icon(Icons.post_add),
-title: Text('Ajouter un don'),
+leading: Icon(Icons.post_add,color: kontColor),
+title: Text('Ajouter un don',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
  onTap: ()=>{ Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => DonPage()),
+    MaterialPageRoute(builder: (context) =>DonPage()),
   )
 },
+ tileColor: Colors.amber[50],
 ),
- Divider(thickness: 2,),
+ Divider(thickness: 3,),
  ListTile(
-     leading: Icon(Icons.add_task),
-     title: Text('Ajouter une demande'),
+ 
+     leading: Icon(Icons.add_task,color: kPrimaryColor,),
+     
+     title: Text('Ajouter une demande',style: TextStyle(fontSize: 19,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold),),
      onTap: ()=>{ Navigator.push(context,
     MaterialPageRoute(builder: (context) => AddEditDemande()),
   )},
+  tileColor: Colors.amber[50],
    ),
 
           ],
