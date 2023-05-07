@@ -165,8 +165,8 @@ class _SignUpFormState extends State<SignUpForm>{
                           },
               controller: phoneController,
               keyboardType: TextInputType.phone,
+               maxLength: 8,
               textInputAction: TextInputAction.next,
-           
               cursorColor: kPrimaryColor,
               // ignore: prefer_const_constructors
               decoration: InputDecoration(
@@ -191,7 +191,7 @@ controller: passwordController,
               // ignore: prefer_const_constructors
               decoration: InputDecoration(
                    errorText: _isNotValidate ?"Veuillez entrer un mot de passe (au moins 6 caractéres)":null,
-                hintText: "Your password",
+                hintText: "Mot de passe",
                 // ignore: prefer_const_constructors
                 prefixIcon: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
@@ -207,7 +207,6 @@ controller: passwordController,
               FirebaseAuth.instance.createUserWithEmailAndPassword(
                 email: emailController.text,
                  password: passwordController.text,
-             
                  ).then((value) {
                   Fluttertoast.showToast(
   msg: "Compte créer avec succés",

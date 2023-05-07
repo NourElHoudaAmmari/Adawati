@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class DonList extends StatefulWidget {
     final User? user; 
-  DonList({Key? key, this.user}) : super(key: key) ;
+  gitDonList({Key? key, this.user}) : super(key: key) ;
   @override
   State<DonList> createState() => _DonListState();
 }
@@ -31,7 +31,73 @@ class _DonListState extends State<DonList> {
      
    _stream = _reference.where('userId', isEqualTo: userId).snapshots();
   }
-   Future<void> deletedon(String donID) => _reference.doc(donID).delete();
+void _deleteDonation(String id) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Confirmer la suppression'),
+        content: Text('Êtes-vous sûr(e) de vouloir supprimer ce don ?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Annuler'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Supprimer'),
+            onPressed: () async {
+              try {
+                await _reference.doc(id).delete();
+                Navigator.of(context).pop();
+                // Show a success message
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Suppression réussie'),
+                      content: Text('Le don a été supprimé avec succès.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } catch (e) {
+                Navigator.of(context).pop();
+                // Show an error message
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Echec de supprimer ce don'),
+                      content: Text('Une erreur s\'est produite lors de la suppression de ce don: $e'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
 final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
@@ -215,7 +281,8 @@ children: [
                               color: Colors.redAccent,
                             ),
                             onPressed: () {
-                              deletedon(donID!);
+                            _deleteDonation(thisItem['id']);
+                      
                             },
                           ),
                         ],

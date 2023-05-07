@@ -3,6 +3,7 @@ import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/models/demande_model.dart';
 import 'package:adawati/screens/demande/demande_screen.dart';
 import 'package:adawati/screens/demande/form_edit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_helpers/firebase_helpers.dart';
@@ -36,8 +37,8 @@ class _AddEditDemandeState extends State<AddEditDemande> {
   bool isedit = false;
   final TextEditingController description = TextEditingController();
   final TextEditingController id = TextEditingController();
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-     String? userId;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+    String? userId;
   String? userName;
 
 
@@ -120,7 +121,7 @@ class _AddEditDemandeState extends State<AddEditDemande> {
     _form_Key.currentState!.save();
      final user =FirebaseAuth.instance.currentUser;
            final userId = user!= null? user.uid :null;
-         String? userName = user!=null?user.displayName :null;
+         String? userName = user!=null?user.email :null;
     if (isedit == true) {
       DemandeController().update_demande(DemandeModel(
         id: id.text,

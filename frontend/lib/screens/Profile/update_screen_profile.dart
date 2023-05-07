@@ -68,13 +68,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             builder: (context,snapshot){
               if(snapshot.connectionState == ConnectionState.done){
 if(snapshot.hasData){
-  User user = snapshot.data as User;
-  final id = TextEditingController(text: user.id);
-  final email =TextEditingController(text: user.email);
-    final password =TextEditingController(text: user.password);
-      final name =TextEditingController(text: user.name);
-        final address =TextEditingController(text: user.address);
-        final phone =TextEditingController(text: user.phone);
+ User user = snapshot.data as User;
+        final id = TextEditingController(text: user.id);
+        final email = TextEditingController(text: user.email ?? '');
+        final password = TextEditingController(text: user.password ?? '');
+        final name = TextEditingController(text: user.name ?? '');
+        final address = TextEditingController(text: user.address ?? '');
+        final phone = TextEditingController(text: user.phone ?? '');
   return Column(
               children: [
                 Stack(
