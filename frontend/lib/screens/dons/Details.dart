@@ -73,14 +73,15 @@ class _DonDetailsState extends State<DonDetails> {
              
             //display the data
            return Padding(
-             padding: const EdgeInsets.symmetric(vertical: 5 , horizontal: 10),
+             padding: const EdgeInsets.only(left: 20.0),
              child: Align(
              child: Column(
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
+                SizedBox(height: 10,),
                  Container(
-                   height: 250.0,
-                   width: 550.0,
+                   height: 280.0,
+                   width: 600.0,
                    decoration: BoxDecoration(border: Border.all(color: Colors.white)),
                    padding: const EdgeInsets.all(5.0),
                    child: data.containsKey('image')
@@ -211,11 +212,11 @@ class _DonDetailsState extends State<DonDetails> {
              
     
                 Divider(thickness: 2,),
-                         Row(
-  //crossAxisAlignment: CrossAxisAlignment.start,
+                           Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
   children: [
      Text(
-      'Description : ',
+      'Description',
       style: TextStyle(
         color: Colors.grey[800],
         fontSize: 20,
@@ -237,13 +238,7 @@ class _DonDetailsState extends State<DonDetails> {
   ],
                          ),
                          SizedBox(height: 12,),
-                  Container(
-  decoration: BoxDecoration(
-    border: Border.all(color: Colors.white),
-    borderRadius: BorderRadius.circular(8),
-  ),
-
-),
+  
 
                ],
              ),

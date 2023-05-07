@@ -80,6 +80,9 @@ children: [
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
+            Navigator.push(context,
+    MaterialPageRoute(builder: (context) => ProfileScreen()),
+  );
      },
     icon: const Icon(Icons.person),
     ),
@@ -162,43 +165,26 @@ children: [
   
 ),
 
-Row(
-  children: [
-    TextButton(
-                  onPressed: () {
-    Navigator.push(
-                        context,
+ Row(
+               children: [
+                     TextButton(
+                  onPressed: () {Navigator.push(context,
                        MaterialPageRoute(
                        builder: (context) =>HomePage()),
-                        );                // Add your onPressed logic here
+                        );               
                   },
-                  child: Text(
-                    'Dons',
-                    style: TextStyle(color: Colors.deepOrange[800], fontWeight: FontWeight.bold),
-                  ),
-                ),
-        TextButton(
-    
-                      onPressed: () {
-    Navigator.push(
+                  child: Text(  'Dons',
+                    style: TextStyle(fontSize:20 ,color: Colors.deepOrange[800], fontWeight: FontWeight.bold ),  ),),
+                     TextButton(onPressed: () {Navigator.push(
                         context,
                        MaterialPageRoute(
                        builder: (context) =>Demande()),
                         );
-                       // Naviguer vers la page souhaitée
-                            },
-                        // Add your onPressed logic here
-    
-                   
-    
+                      },
                       child: Text(
-    
                         'Demandes',
-    
-                        style: TextStyle(color: kontColor, fontWeight: FontWeight.bold),
-    
+                        style: TextStyle(fontSize:20, color: kontColor, fontWeight: FontWeight.bold),
                       ),
-    
                     ),
   ],
 ),

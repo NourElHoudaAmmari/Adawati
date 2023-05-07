@@ -34,7 +34,7 @@ class _EditDemandeScreenState extends State<EditDemandeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         backgroundColor: kPrimaryColor,
+         backgroundColor: kontColor,
         title: Text('Modifier demande',
         style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),
         ),

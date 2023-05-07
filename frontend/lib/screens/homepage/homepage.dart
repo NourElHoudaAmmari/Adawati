@@ -280,13 +280,11 @@ children: [
                             Expanded(
                               child: thisItem.containsKey('image')
                                   ? Image.network('${thisItem['image']}')
-                                  :  Container(),
-                                
+                                  :  Container(),  
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text('${thisItem['title']}',
-                               
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,

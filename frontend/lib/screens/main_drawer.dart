@@ -31,6 +31,7 @@ class _MainDrawerState extends State<MainDrawer> {
   void  initState() {
     super.initState();
     getUserData();
+    
    // fetchUserData();
   }
 
@@ -56,7 +57,8 @@ void getUserData() async {
         email = userEmail;
       });
     } else {
-  
+  print(name);
+  print(email);
     }
   }
   @override
@@ -68,7 +70,7 @@ void getUserData() async {
 Container(
   width: double.infinity,
   padding: EdgeInsets.all(20),
-  color: Colors.blue[900],
+  color: kontColor,
   child: Center(
     child: Column(
       children: <Widget> [

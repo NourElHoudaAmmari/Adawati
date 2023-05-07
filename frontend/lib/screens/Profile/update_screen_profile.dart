@@ -4,6 +4,7 @@ import 'package:adawati/controllers/profile_controller.dart';
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/models/user.dart';
 import 'package:adawati/screens/Profile/profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +45,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       });
     }
   }
+  uploadFile()async{
+    var imageFile = FirebaseStorage.instance.ref().child("path").child("/.jpg");
+    UploadTask task = imageFile.putFile(file!);
+    TaskSnapshot snapshot = await task;
+     url = await snapshot.ref.getDownloadURL();
+    await FirebaseFirestore.instance.collection("imagess").doc().set({
+      "imageUrl":url
+     });
+  }
 
-  File? profileImage;
+String url="";
+  File? file;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
@@ -112,15 +123,16 @@ if(snapshot.hasData){
                     ),
                   );
                 },
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: imageUrl == ""
-                                    ? Image.asset(
-                                        'assets/images/profile_pic.png')
-                                    : Image.network(imageUrl),
-                              ),
+               child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: file == null
+                                  ? Image.asset(
+                                      'assets/images/profile_pic.png')
+                                  : Image(
+                                      image: FileImage(File(file!.path))),
                             ),
                           ),
+                        ),
                     Positioned(
                       bottom: 0,
                       right: 0,
@@ -194,14 +206,7 @@ if(snapshot.hasData){
                         child: ElevatedButton(
                         onPressed:() async {
                           String imagePath = '';
-if (profileImage != null) {
-Reference ref = FirebaseStorage.instance
-.ref()
-.child('profilepics/${Path.basename(profileImage!.path)}');
-final UploadTask= ref.putFile(profileImage!);
-final snapshot = await UploadTask;
-imagePath = await snapshot.ref.getDownloadURL();
-}
+                          uploadFile();
                           final userData =User(
                             id : id.text,
                            email: email.text.trim(),

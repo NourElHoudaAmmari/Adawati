@@ -1,16 +1,17 @@
 import 'package:adawati/providers/dons_provider.dart';
+import 'package:adawati/repository/user_repository.dart';
 import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/screens/homepage/chat.dart';
 import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:adawati/repository/authentification_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../helpers/constants.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../helpers/constants.dart';
-import '../../services/whishlist_service.dart';
 
 class DonDetails extends StatefulWidget {
  DonDetails(this.itemId,{Key? key}) : super(key: key) {
@@ -29,6 +30,10 @@ class DonDetails extends StatefulWidget {
 }
 
 class _DonDetailsState extends State<DonDetails> {
+   final _authRepo = Get.put(AuthentificationRepository());
+  final _userRepo = Get.put(UserRepository());
+     String name = '';
+     String email ='';
   late WhishListService _service;
    List fav = [];
 bool _isLiked = false;
@@ -39,8 +44,22 @@ bool _isLiked = false;
    super.initState;
     _service = WhishListService();
   getFavourites();
+    getUserData();
  
  }
+ void getUserData() async {
+    final userEmail = _authRepo.firebaseUser.value?.email;
+    if (userEmail != null) {
+      final user = await _userRepo.getUserDetails(userEmail);
+      setState(() {
+        name = user.name;
+        email = userEmail;
+      });
+    } else {
+  print(name);
+  print(email);
+    }
+  }
 
   getFavourites(){
      _service.dons.doc(widget._reference.id).get().then((value){
@@ -329,15 +348,23 @@ Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '${data['userName']}',
+            name,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 15,
             ),
           ),
+           Text(
+            email,
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
         ],
       ),
-      SizedBox(width: 35),
+      SizedBox(width: 89),
       InkWell(
         onTap: ()async {
 final Uri url=Uri(scheme: 'tel',
@@ -353,7 +380,7 @@ if(await canLaunchUrl(url)){
           label: "Appel",
         ),
       ),
-      SizedBox(width: 12),
+      SizedBox(width: 25),
       InkWell(
         onTap: () {
              Navigator.push(context,

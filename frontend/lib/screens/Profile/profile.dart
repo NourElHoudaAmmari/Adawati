@@ -8,7 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'package:adawati/repository/user_repository.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -17,20 +18,35 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final user =FirebaseAuth.instance.currentUser;
+     final _authRepo = Get.put(AuthentificationRepository());
+  final _userRepo = Get.put(UserRepository());
+ /* final user =FirebaseAuth.instance.currentUser;
   
    final CollectionReference usersRef =
-      FirebaseFirestore.instance.collection("users");
+      FirebaseFirestore.instance.collection("users");*/
      String name = '';
      String email ='';
 
  @override
 void initState() {
-  super.initState;
-  fetchUserData();
+  super.initState();
+  //fetchUserData();
+   getUserData();
 }
+void getUserData() async {
+    final userEmail = _authRepo.firebaseUser.value?.email;
+    if (userEmail != null) {
+      final user = await _userRepo.getUserDetails(userEmail);
+      setState(() {
+        name = user.name;
+        email = userEmail;
+      });
+    } else {
+  
+    }
+  }
 
-void fetchUserData() async {
+/*void fetchUserData() async {
   User? currentUser = FirebaseAuth.instance.currentUser;
   if (currentUser != null) {
     DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
@@ -45,7 +61,7 @@ void fetchUserData() async {
       });
     }
   }
-}
+}*/
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +104,13 @@ void fetchUserData() async {
                 ],
               ),
               const SizedBox(height: 10,),
-   Text(
+             Text(
             name,
                 style: TextStyle(fontSize: 20,color: kPrimaryColor,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold)
               ),
               
               Text(
-                
-               (user?.email ?? ''),
+              email,
                 style: TextStyle(fontSize: 16,color: kontColor,fontStyle: FontStyle.normal),
               ),
               const SizedBox(height: 25),

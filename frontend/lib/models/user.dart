@@ -11,6 +11,8 @@ final String? address;
       final String? profilePick;
       final bool? isBlocked;
 
+     
+
   User({
      this.id,
    required  this.name,

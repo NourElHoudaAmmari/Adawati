@@ -1,5 +1,6 @@
 
 import 'package:adawati/models/register_request_model.dart';
+import 'package:adawati/repository/user_repository.dart';
 import 'package:adawati/screens/Signup/components/or_divider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +26,7 @@ class SignUpForm extends StatefulWidget {
   _SignUpFormState createState()=> _SignUpFormState();
 }
 class _SignUpFormState extends State<SignUpForm>{
-  final auth = FirebaseAuth.instance;
+
   @override
   void dispose(){
     emailController.dispose();
@@ -34,21 +35,39 @@ class _SignUpFormState extends State<SignUpForm>{
     phoneController.dispose();
     super.dispose();
   }
-  Future addUserDetails(String name,String email,String phone,String password,String uid)async{
-    await FirebaseFirestore.instance.collection('users').add({
-        'name':name,
-        'email':email,
-        'phone':phone,
-        'password':password,
-        'uid':auth.currentUser!.uid,
-    });
+ Future addUserDetails(String name, String email, String phone, String password) async {
+  // vérifier si l'e-mail est déjà enregistré
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('email', isEqualTo: email)
+      .limit(1)
+      .get();
+  
+  if (snapshot.docs.isNotEmpty) {
+                      Fluttertoast.showToast(
+  msg: "un compte existe déjà pour cet e-mail",
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.TOP_RIGHT,
+  backgroundColor: Colors.red,
+  textColor: Colors.white,
+);
+    throw Exception("Cet e-mail est déjà enregistré, veuillez en utiliser un autre.");
 
+  } else {
+    // enregistrer les détails de l'utilisateur
+    await FirebaseFirestore.instance.collection('users').add({
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'password': password,
+    });
   }
+}
+   String uid = "";
     String name = "";
     String email = "";
     String phoneNumber="";
     String password = "";
-     String uid = "";
  TextEditingController emailController = TextEditingController();
  TextEditingController passwordController = TextEditingController();
    TextEditingController nameController = TextEditingController();
@@ -165,8 +184,8 @@ class _SignUpFormState extends State<SignUpForm>{
                           },
               controller: phoneController,
               keyboardType: TextInputType.phone,
-               maxLength: 8,
               textInputAction: TextInputAction.next,
+           
               cursorColor: kPrimaryColor,
               // ignore: prefer_const_constructors
               decoration: InputDecoration(
@@ -207,6 +226,7 @@ controller: passwordController,
               FirebaseAuth.instance.createUserWithEmailAndPassword(
                 email: emailController.text,
                  password: passwordController.text,
+                 //name :nameController.text
                  ).then((value) {
                   Fluttertoast.showToast(
   msg: "Compte créer avec succés",
@@ -233,49 +253,8 @@ MaterialPageRoute(builder: (context)=>LoginScreen()));
                  emailController.text.trim(),
                 phoneController.text.trim(),
                  passwordController.text.trim(),
-                 uid
-                   
+            
                     );
-            
-      /*  if(validateAndSave()){
-        setState(() {
-          isApiCallProcess=true;
-        });
-RegisterRequestModel model = LoginRequestModel(
-                    password: password !,
-                    email: email !,
-                     );
-        APIService.register(model).then(
-          (response) {
-            setState(() {
-              isApiCallProcess=false;
-            });
-            if(response.data !=null){
-              FormHelper.showSimpleAlertDialog(
-                context,
-                Config.appName,
-                "Inscription validée, veuillez connecter",
-                "ok",
-                (){
-                  Navigator.pushNamedAndRemoveUntil(context, 
-                 '/', (route) => false,
-                 );
-                },
-              );
-            }else{
-              FormHelper.showSimpleAlertDialog(context,
-              Config.appName,
-              response.message,
-              "ok",
-              (){
-                Navigator.of(context).pop();
-              },
-              );
-            }
-          },
-          ),
-        }*/
-            
            
   }, child: Text("S`inscrire".toUpperCase())),
 

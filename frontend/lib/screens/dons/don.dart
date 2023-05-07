@@ -81,9 +81,7 @@ bool _isCategorieSelected = false;
       setState(() {
         _isLoading = false;
       });
-      Navigator.push(context,
-    MaterialPageRoute(builder: (context) => DonList()),
-      );
+      Navigator.of(context).pop();
            ScaffoldMessenger.of(context).showSnackBar(
   SnackBar(
     backgroundColor: Colors.green,
