@@ -212,8 +212,8 @@ children: [
            return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, //two columns
-          mainAxisSpacing: 0.1, //space the card
-          childAspectRatio: 0.800, //space largo de cada card
+          //mainAxisSpacing: 0.1, //space the card
+          childAspectRatio: 0.81, //space largo de cada card
         ),
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
@@ -251,7 +251,7 @@ children: [
                     ),
                     subtitle: Text(
                       '${thisItem['description']}',
-                       maxLines: 1,
+                       maxLines: 2,
       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.grey,
