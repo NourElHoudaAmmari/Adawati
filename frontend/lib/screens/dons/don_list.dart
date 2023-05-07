@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class DonList extends StatefulWidget {
     final User? user; 
-  gitDonList({Key? key, this.user}) : super(key: key) ;
+  DonList({Key? key, this.user}) : super(key: key) ;
   @override
   State<DonList> createState() => _DonListState();
 }
