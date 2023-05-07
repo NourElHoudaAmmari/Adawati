@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:core';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 class DonPage extends StatefulWidget {
   const DonPage({super.key});
 
@@ -26,6 +27,7 @@ class _DonPageState extends State<DonPage> {
   bool _isLoading = false;
   String selectedEtat="0";
    String selectedCategorie="0";
+bool _isCategorieSelected = false;
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -82,15 +84,15 @@ class _DonPageState extends State<DonPage> {
       Navigator.push(context,
     MaterialPageRoute(builder: (context) => DonList()),
       );
-               ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      backgroundColor: Colors.green,
-      content: Text(
-        'Don ajouté',
-        style: TextStyle(color: Colors.white),
-      ),
+           ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    backgroundColor: Colors.green,
+    content: Text(
+      'Don ajouté avec succés',
+      style: TextStyle(color: Colors.white),
     ),
-  );
+  ),
+);   
     }
   }
 
@@ -222,7 +224,9 @@ class _DonPageState extends State<DonPage> {
               value:categories["name"],
               child:Text(                                                      
              categories['name'],
+             
               ),
+              
               ),
               );
           }
@@ -232,13 +236,16 @@ class _DonPageState extends State<DonPage> {
            onChanged: (categorieValue){
             setState(() {
               selectedCategorie=categorieValue;
+              _isCategorieSelected = true;
             });
-          print(categorieValue);
         },
         value: selectedCategorie,
         isExpanded: false,
+         hint: Text('Sélectionner une catégorie'),
         );
+        
       }
+      
     ),
   ],
 ),
@@ -483,15 +490,6 @@ class _DonPageState extends State<DonPage> {
             
             isCompleted = true;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      backgroundColor: Colors.green,
-      content: Text(
-        'Don ajouté',
-        style: TextStyle(color: Colors.white),
-      ),
-    ),
-  );
         }else{
           setState(() {
             _activeStepIndex += 1;
@@ -563,13 +561,35 @@ valueColor: AlwaysStoppedAnimation(Colors.grey),
   }
   bool isDetailComplete(){
     if(_activeStepIndex ==0){
-      if(_titleController.text.isEmpty || _descriptionController.text.isEmpty || _adresseController.text.isEmpty){
+      if(_titleController.text.isEmpty || _descriptionController.text.isEmpty || _adresseController.text.isEmpty  ||   !_isCategorieSelected
+      ){
+        ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    backgroundColor: Colors.red,
+    content: Text(
+      'Veuillez sélectionner une catégorie',
+      style: TextStyle(color: Colors.white),
+    ),
+  ),
+);  
         return false;
+        
       }else{
         return true;
       }
     }else if (_activeStepIndex ==1){
-      if(_phoneController.text.isEmpty){
+      if(_imageFile!.path.isEmpty ||
+      _phoneController.text.isEmpty){
+         ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    backgroundColor: Colors.red,
+    content: Text(
+      'Veuillez sélectionner une image',
+      style: TextStyle(color: Colors.white),
+    ),
+  ),
+); 
+        
         return false;
       }else{
         return true;

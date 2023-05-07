@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
    final CollectionReference usersRef =
       FirebaseFirestore.instance.collection("users");
      String name = '';
-    // String email ='';
+     String email ='';
 
  @override
 void initState() {
@@ -39,6 +39,7 @@ void fetchUserData() async {
     if (userData != null) {
       setState(() {
         name = userData['name'];
+       email = userData['email'];
         
 
       });
@@ -91,7 +92,9 @@ void fetchUserData() async {
             name,
                 style: TextStyle(fontSize: 20,color: kPrimaryColor,fontStyle: FontStyle.italic,fontWeight: FontWeight.bold)
               ),
+              
               Text(
+                
                (user?.email ?? ''),
                 style: TextStyle(fontSize: 16,color: kontColor,fontStyle: FontStyle.normal),
               ),

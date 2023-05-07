@@ -6,8 +6,8 @@ class User{
    final String name;
     final String email;
 final String phone;
-final String address;
-      final String password;
+final String? address;
+      final String? password;
       final String? profilePick;
       final bool? isBlocked;
 
@@ -46,7 +46,7 @@ factory User.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
     phone: data["phone"],
       address: data["address"],
             profilePick: data["profilePick"],
-               isBlocked: data["isBlocked"],
+              // isBlocked: data["isBlocked"],
      );
 }
     
