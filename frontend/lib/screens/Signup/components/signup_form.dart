@@ -35,7 +35,7 @@ class _SignUpFormState extends State<SignUpForm>{
     phoneController.dispose();
     super.dispose();
   }
- Future addUserDetails(String name, String email, String phone, String password) async {
+ Future addUserDetails(String name, String email, String phone, String password ,String profilePick) async {
   // vérifier si l'e-mail est déjà enregistré
   final snapshot = await FirebaseFirestore.instance
       .collection('users')
@@ -60,6 +60,7 @@ class _SignUpFormState extends State<SignUpForm>{
       'email': email,
       'phone': phone,
       'password': password,
+      'profilePick':profilePick,
     });
   }
 }
@@ -68,7 +69,10 @@ class _SignUpFormState extends State<SignUpForm>{
     String email = "";
     String phoneNumber="";
     String password = "";
+    String profilePick="";
  TextEditingController emailController = TextEditingController();
+ 
+  TextEditingController profilePickController = TextEditingController();
  TextEditingController passwordController = TextEditingController();
    TextEditingController nameController = TextEditingController();
    TextEditingController phoneController = TextEditingController();
@@ -253,6 +257,7 @@ MaterialPageRoute(builder: (context)=>LoginScreen()));
                  emailController.text.trim(),
                 phoneController.text.trim(),
                  passwordController.text.trim(),
+                 profilePickController.text.trim(),
             
                     );
            
