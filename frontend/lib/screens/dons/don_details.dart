@@ -376,7 +376,7 @@ if(await canLaunchUrl(url)){
           label: "Appel",
         ),
       ),
-      SizedBox(width: 25),
+      SizedBox(width: 18),
       InkWell(
         onTap: () {
              Navigator.push(context,
