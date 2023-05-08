@@ -1,11 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, avoid_returning_null_for_void, must_be_immutable, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
 import 'package:adawati/helpers/constants.dart';
-import 'package:adawati/repository/authentification_repository.dart';
-import 'package:adawati/screens/demande/demande_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart' as firestore_extended; // Alias pour éviter les conflits de noms
-
-import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/dons/don.dart';
@@ -13,13 +8,9 @@ import 'package:adawati/screens/dons/don_details.dart';
 import 'package:adawati/screens/homepage/chat.dart';
 import 'package:adawati/screens/homepage/favoirs.dart';
 import 'package:adawati/screens/main_drawer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../main.dart';
 import '../demande/demande.dart';
 
 //import '../dons/don_details.dart';

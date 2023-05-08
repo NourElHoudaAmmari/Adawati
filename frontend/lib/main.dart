@@ -1,27 +1,25 @@
-//import 'package:adawati/don_add_edit.dart';
-//import 'package:adawati/don_list.dart';
-
-
-import 'package:adawati/providers/user_provider.dart';
 import 'package:adawati/repository/authentification_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/screens/Welcome/welcome_screen.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-import 'package:adawati/screens/Login/login_screen.dart';
-import 'package:adawati/services/shared_service.dart';
-import 'package:adawati/screens/Signup/signup_screen.dart';
-import 'package:adawati/screens/homepage/homepage.dart';
-import 'package:adawati/services/api_service.dart';
 import'package:firebase_core/firebase_core.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 void main() async{
+
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  print("Handling a background message: ${message.messageId}");
+}
  try {
    WidgetsFlutterBinding.ensureInitialized();
    await Firebase.initializeApp();
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print(fcmToken);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessage.listen(_firebaseMessagingBackgroundHandler);
  } catch (e) {}
  runApp(MyApp());
 
