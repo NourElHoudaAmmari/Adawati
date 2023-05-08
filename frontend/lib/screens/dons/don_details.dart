@@ -334,12 +334,12 @@ Row(
   ),
   child: Row(
     children: <Widget>[
-      SizedBox(width: 5),
+      SizedBox(width: 1),
       CircleAvatar(
         backgroundImage: AssetImage('assets/images/profile_pic.png'),
         radius: 25,
       ),
-      SizedBox(width: 10),
+      SizedBox(width: 5),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -360,9 +360,13 @@ Row(
           ),
         ],
       ),
-      SizedBox(width: 75),
-      InkWell(
-        onTap: ()async {
+      SizedBox(width: 60),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Padding(padding: EdgeInsets.only(left: 30)),
+          InkWell(
+            onTap: ()async {
 final Uri url=Uri(scheme: 'tel',
 path:'${data['phone']}' );
 if(await canLaunchUrl(url)){
@@ -371,12 +375,14 @@ if(await canLaunchUrl(url)){
   print('cannot launch this url');
 }
   },
-        child: IconoMenu(
-          icon: Icons.call,
-          label: "Appel",
-        ),
+            child: IconoMenu(
+              icon: Icons.call,
+              label: "Appel",
+            ),
+          ),
+        ],
       ),
-      SizedBox(width: 18),
+      SizedBox(width: 15),
       InkWell(
         onTap: () {
              Navigator.push(context,

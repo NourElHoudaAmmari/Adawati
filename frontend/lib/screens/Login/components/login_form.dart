@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors
-
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +53,12 @@ void init() {
 
     // If the user is already logged in, navigate to the home page
     if (isLoggedIn) {
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      });
     }
   });
 }
