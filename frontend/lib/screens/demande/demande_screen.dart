@@ -26,7 +26,7 @@ CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
    late Future<QuerySnapshot> demande;
    late Stream<QuerySnapshot> _stream;
    @override
-  void get initState {
+  void initState() {
     super.initState;
      _stream = _demande.where('userId', isEqualTo: userId).snapshots();
   }

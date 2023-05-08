@@ -232,6 +232,9 @@ if(snapshot.hasData){
       elevation: 4,
     ),
   );
+        Navigator.push(context,
+    MaterialPageRoute(builder: (context) => ProfileScreen()),
+      );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
          

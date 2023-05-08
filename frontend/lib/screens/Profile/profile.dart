@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       String profilePick =  '';
 
  @override
-void get initState {
+void initState() {
   super.initState;
   //fetchUserData();
    getUserData();

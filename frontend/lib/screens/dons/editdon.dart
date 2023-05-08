@@ -32,7 +32,7 @@ class _EditDonState extends State<EditDon> {
   String selectedEtat = "";
 
   @override
-  void get initState {
+  void initState() {
     
     super.initState;
     data = widget.data;
