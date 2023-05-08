@@ -7,7 +7,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:core';
 import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart';
+import 'package:adawati/repository/user_repository.dart';
+import 'package:adawati/repository/authentification_repository.dart';
 class DonPage extends StatefulWidget {
   const DonPage({super.key});
 
@@ -15,6 +18,8 @@ class DonPage extends StatefulWidget {
   State<DonPage> createState() => _DonPageState();
 }
 class _DonPageState extends State<DonPage> {
+   final _authRepo = Get.put(AuthentificationRepository());
+  final _userRepo = Get.put(UserRepository());
   final FirebaseAuth auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
@@ -29,6 +34,22 @@ class _DonPageState extends State<DonPage> {
    String selectedCategorie="0";
 bool _isCategorieSelected = false;
 bool _isEtatSelected = false;
+  String name = '';
+     String email ='';
+     void getUserData() async {
+    final userEmail = _authRepo.firebaseUser.value?.email;
+    if (userEmail != null) {
+      final user = await _userRepo.getUserDetails(userEmail);
+      setState(() {
+        name = user.name;
+        email = userEmail;
+      });
+    } else {
+  print(name);
+  print(email);
+    }
+  }
+
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: source);
@@ -72,12 +93,13 @@ if (_imageFile == null) {
       final imageDownloadUrl = await _uploadImageToStorage(_imageFile!);
       final user =FirebaseAuth.instance.currentUser;
        final userId = user!= null? user.uid :null;
-         String? userName = user!=null?user.displayName :null;
+   
     String donId = FirebaseFirestore.instance.collection('dons').doc().id;
 
     await FirebaseFirestore.instance.collection('dons').doc(donId).set({
       'userId':userId,
-      'userName' :userName,
+      'userName' :name,
+      'email': email,
       'id': donId, // Ajouter l'ID du don
         'title': title,
        'description':description,
@@ -103,6 +125,13 @@ if (_imageFile == null) {
   ),
 );   
     }
+  }
+  @override
+   void get initState{
+    super.initState;
+    getUserData();
+    
+   // fetchUserData();
   }
 
   @override
