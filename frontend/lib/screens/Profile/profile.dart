@@ -26,10 +26,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       FirebaseFirestore.instance.collection("users");*/
      String name = '';
      String email ='';
+     String imageUrl = '';
+      String profilePick =  '';
 
  @override
-void initState() {
-  super.initState();
+void get initState {
+  super.initState;
   //fetchUserData();
    getUserData();
 }
@@ -56,7 +58,8 @@ void getUserData() async {
       setState(() {
         name = userData['name'];
        email = userData['email'];
-        
+        imageUrl = userData['profilePick'];
+        profilePick = userData['profilePick'];
 
       });
     }
@@ -74,7 +77,6 @@ void getUserData() async {
              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
           }, icon: const Icon(CupertinoIcons.arrowtriangle_left)),
           title: Text("Profile", style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic)),
-         
     
         ),
       body: SingleChildScrollView(
@@ -82,27 +84,45 @@ void getUserData() async {
           padding: const EdgeInsets.all(30),
           child: Column(
             children: [
+        
               Stack(
-                children: [
-                  SizedBox(
-                    width: 120,
-                    height: 120,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.asset('assets/images/profile_pic.png')),
+  children: [
+    SizedBox(
+      width: 120,
+      height: 120,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(100),
+        child: imageUrl.isNotEmpty
+          ? Image.network(
+              imageUrl,
+              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                      : null,
                   ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                     width: 35,
-                     height: 35,
-                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.grey),
-                    
-                     ),
-                  ),
-                ],
-              ),
+                );
+              },
+            )
+          : Image.asset('assets/images/profile_pic.png'),
+      ),
+    ),
+    Positioned(
+      bottom: 0,
+      right: 0,
+      child: Container(
+        width: 35,
+        height: 35,
+        // decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.grey),
+      ),
+    ),
+  ],
+),
+
               const SizedBox(height: 10,),
              Text(
             name,
@@ -110,7 +130,7 @@ void getUserData() async {
               ),
               
               Text(
-              email,
+               email,
                 style: TextStyle(fontSize: 16,color: kontColor,fontStyle: FontStyle.normal),
               ),
               const SizedBox(height: 25),

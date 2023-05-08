@@ -33,6 +33,7 @@ class _DonPageState extends State<DonPage> {
   String selectedEtat="0";
    String selectedCategorie="0";
 bool _isCategorieSelected = false;
+bool _isEtatSelected = false;
   String name = '';
      String email ='';
      void getUserData() async {
@@ -67,7 +68,18 @@ bool _isCategorieSelected = false;
   }
 
   Future<void> _addDon() async {
-
+if (_imageFile == null) {
+ ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    backgroundColor: Colors.red,
+    content: Text(
+("Veuillez sélectionner une image"),
+      style: TextStyle(color: Colors.white),
+    ),
+  ),
+);  ;
+    return;
+  }
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -115,8 +127,8 @@ bool _isCategorieSelected = false;
     }
   }
   @override
-   void  initState() {
-    super.initState();
+   void get initState{
+    super.initState;
     getUserData();
     
    // fetchUserData();
@@ -416,8 +428,8 @@ bool _isCategorieSelected = false;
            onChanged: (etatValue){
             setState(() {
               selectedEtat=etatValue;
+              _isEtatSelected = true;
             });
-          print(etatValue);
         },
         value: selectedEtat,
         isExpanded: false,
@@ -604,25 +616,22 @@ valueColor: AlwaysStoppedAnimation(Colors.grey),
         return true;
       }
     }else if (_activeStepIndex ==1){
-      if(_imageFile!.path.isEmpty ||
-      _phoneController.text.isEmpty){
-         ScaffoldMessenger.of(context).showSnackBar(
+      if( !_isEtatSelected|| _phoneController.text.isEmpty){
+        
+               ScaffoldMessenger.of(context).showSnackBar(
   SnackBar(
     backgroundColor: Colors.red,
     content: Text(
-      'Veuillez sélectionner une image',
+      'Veuillez sélectionner etat',
       style: TextStyle(color: Colors.white),
     ),
   ),
-); 
-        
+);
         return false;
       }else{
         return true;
       }
     }
     return false;
-  }
-  
-  
+  } 
 }

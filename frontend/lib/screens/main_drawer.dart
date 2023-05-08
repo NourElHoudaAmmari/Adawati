@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
@@ -28,8 +26,8 @@ class _MainDrawerState extends State<MainDrawer> {
      String name = '';
      String email ='';
        @override
-  void  initState() {
-    super.initState();
+  void get initState {
+    super.initState;
     getUserData();
     
    // fetchUserData();

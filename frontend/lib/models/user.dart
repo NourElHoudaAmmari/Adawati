@@ -20,7 +20,7 @@ final String? address;
      required this.phone, 
      required this.address, 
     required  this.password,
-    this.profilePick,
+      required this.profilePick,
     this.isBlocked=false,
     
      });
