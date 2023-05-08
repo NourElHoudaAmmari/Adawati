@@ -8,6 +8,7 @@ import 'package:adawati/controllers/profile_controller.dart';
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/models/user.dart';
 import 'package:adawati/screens/Profile/profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ Future<void> _pickImage(ImageSource source) async {
       _imageController.text = Path.basename(_imageFile!.path);
     });
   }
+
 }
 Future<String> _uploadImageToStorage(File file) async {
   final storageRef = FirebaseStorage.instance.ref().child('${Path.basename(file.path)}');
@@ -51,6 +53,7 @@ Future<String> _uploadImageToStorage(File file) async {
   return snapshot.ref.getDownloadURL();
 }
   String imageUrl = '';
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController());
@@ -87,46 +90,13 @@ if(snapshot.hasData){
                 children: [
                    Stack(
   children: [
+    
     SizedBox(
       width: 120,
       height: 120,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: imageUrl.isNotEmpty
-          ? Image.network(
-              imageUrl,
-              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                }
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                      : null,
-                  ),
-                );
-              },
-            )
-          : Image.asset('assets/images/profile_pic.png'),
-      ),
-    ),
-    Positioned(
-      bottom: 0,
-      right: 0,
-      child: Container(
-        width: 35,
-        height: 35,
-        // decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.grey),
-      ),
-    ),
-  ],
-),
-
- TextField(
-  controller: _imageController,
-  readOnly: true,
-  onTap: () async {
+      
+      child:InkWell(
+         onTap: () async {
     await showModalBottomSheet(
       context: context,
       builder: (_) => BottomSheet(
@@ -155,17 +125,32 @@ if(snapshot.hasData){
       ),
     );
   },
-  decoration: InputDecoration(
-    labelText: 'Image',
-    prefixIcon: Icon(Icons.image),
-  ),
-    style: TextStyle(fontSize: 14)
+        child:ClipRRect(
+          
+         borderRadius: BorderRadius.circular(150),
+          child: imageUrl.isNotEmpty
+            ? Image.network(
+                imageUrl,
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                        : null,
+                    ),
+                  );
+                },
+              )
+            : Image.asset('assets/images/profile_pic.png'),
+        ),
+      ),
+    ),
+  ],
 ),
-         
-                  
-                  
-                  
-                  
+
                   const SizedBox(height: 50),
                   Form(
                     child:Column(
@@ -240,9 +225,10 @@ if(snapshot.hasData){
         await controller.updateRecord(userData);
        ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+      backgroundColor: Colors.green,
       content: Text('Données modifiées avec succès!',),
       behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.only(top: 10, right: 10),
+      margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
       elevation: 4,
     ),
   );

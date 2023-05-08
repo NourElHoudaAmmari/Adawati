@@ -2,33 +2,38 @@ import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/demande_screen.dart';
+import 'package:adawati/models/user.dart';
 import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
+//import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:adawati/repository/user_repository.dart';
 import '../helpers/constants.dart';
 class MainDrawer extends StatefulWidget {
-  const MainDrawer({super.key});
-
-  @override
+  const MainDrawer({Key? key}) : super(key: key);
+ @override
   State<MainDrawer> createState() => _MainDrawerState();
 }
 
 class _MainDrawerState extends State<MainDrawer> {
-   final user =FirebaseAuth.instance.currentUser;
+   final _authRepo = Get.put(AuthentificationRepository());
+  final _userRepo = Get.put(UserRepository());
+  /* final user =FirebaseAuth.instance.currentUser;
     final CollectionReference usersRef =
-      FirebaseFirestore.instance.collection("users");
+      FirebaseFirestore.instance.collection("users");*/
      String name = '';
      String email ='';
        @override
   void get initState {
     super.initState;
-    fetchUserData();
+    getUserData();
+    
+   // fetchUserData();
   }
 
-    void fetchUserData() async {
+   /* void fetchUserData() async {
   User? currentUser = FirebaseAuth.instance.currentUser;
   if (currentUser != null) {
     DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
@@ -40,7 +45,20 @@ class _MainDrawerState extends State<MainDrawer> {
       });
     }
   }
-}
+}*/
+void getUserData() async {
+    final userEmail = _authRepo.firebaseUser.value?.email;
+    if (userEmail != null) {
+      final user = await _userRepo.getUserDetails(userEmail);
+      setState(() {
+        name = user.name;
+        email = userEmail;
+      });
+    } else {
+  print(name);
+  print(email);
+    }
+  }
   @override
   Widget build(BuildContext context) {
      
@@ -50,7 +68,7 @@ class _MainDrawerState extends State<MainDrawer> {
 Container(
   width: double.infinity,
   padding: EdgeInsets.all(20),
-  color: Colors.blue[900],
+  color: kontColor,
   child: Center(
     child: Column(
       children: <Widget> [
@@ -76,7 +94,7 @@ Container(
  fontWeight: FontWeight.bold,),
     ),
  Text(  
- (user?.email ?? ''),
+email,
    style: TextStyle(
     color: Colors.white,
    fontWeight: FontWeight.normal,),

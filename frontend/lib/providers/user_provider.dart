@@ -7,7 +7,9 @@ User _user = User(
     email: '',
    phone: '', 
    address: '',
-      password: '',
+    password: '', 
+    profilePick: '',
+      
 );
 
  User get user => _user;

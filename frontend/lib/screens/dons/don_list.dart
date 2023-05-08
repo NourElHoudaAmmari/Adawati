@@ -3,6 +3,8 @@ import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/dons/don.dart';
+import 'package:adawati/screens/homepage/chat.dart';
+import 'package:adawati/screens/homepage/favoirs.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -136,12 +138,20 @@ children: [
    icon: const Icon(Icons.home),
    ),
    IconButton(
-    onPressed: (){},
+    onPressed: (){
+            Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Favoirs()),
+  );
+    },
     icon: const Icon(Icons.favorite_border_outlined),
     ),
     const SizedBox(width: 24),
      IconButton(
-      onPressed: (){},
+      onPressed: (){
+              Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Chat()),
+  );
+      },
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
@@ -189,7 +199,11 @@ children: [
             return Center(
                 child: Text('Some error occurred ${snapshot.error}'));
           }
-
+             if (snapshot.data!.size == 0) {
+            return Center(
+              child: Text('Aucun élément enregistré dans la liste des dons.'),
+            );
+          }
           //Check if data arrived
           if (snapshot.hasData) {
             //get the data
@@ -314,6 +328,7 @@ children: [
     // Show loader if data is not yet available
     return Center(child: CircularProgressIndicator());
   },
+  
 ),
 /*floatingActionButton: FloatingActionButton(
   onPressed: () {

@@ -6,6 +6,8 @@ import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/demande/EditDemandeScreen.dart';
 import 'package:adawati/screens/demande/form_edit.dart';
 import 'package:adawati/screens/dons/don.dart';
+import 'package:adawati/screens/homepage/chat.dart';
+import 'package:adawati/screens/homepage/favoirs.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +26,7 @@ CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
    late Future<QuerySnapshot> demande;
    late Stream<QuerySnapshot> _stream;
    @override
-  void get  initState {
+  void get initState {
     super.initState;
      _stream = _demande.where('userId', isEqualTo: userId).snapshots();
   }
@@ -60,12 +62,20 @@ children: [
    icon: const Icon(Icons.home),
    ),
    IconButton(
-    onPressed: (){},
+    onPressed: (){
+            Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Favoirs()),
+  );
+    },
     icon: const Icon(Icons.favorite_border_outlined),
     ),
     const SizedBox(width: 24),
      IconButton(
-      onPressed: (){},
+      onPressed: (){
+              Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Chat()),
+  );
+      },
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
@@ -88,7 +98,7 @@ children: [
           style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),
         ),
         elevation: 0.0,
-        backgroundColor:kPrimaryColor,
+        backgroundColor:kontColor,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -120,6 +130,11 @@ children: [
                       child: CircularProgressIndicator(color: kontColor),
                     );
                   }
+                     if (snapshots.data!.size == 0) {
+            return Center(
+              child: Text('Aucun élément enregistré dans la liste des demandes.'),
+            );
+          }
                   if (snapshots.hasData) {
                       List<QueryDocumentSnapshot> documents = snapshots.data.docs.where((doc) => doc['userId'] == userId).toList();
                                List<Map> items =

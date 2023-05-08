@@ -1,5 +1,6 @@
 
 import 'package:adawati/models/register_request_model.dart';
+import 'package:adawati/repository/user_repository.dart';
 import 'package:adawati/screens/Signup/components/or_divider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,6 +26,7 @@ class SignUpForm extends StatefulWidget {
   _SignUpFormState createState()=> _SignUpFormState();
 }
 class _SignUpFormState extends State<SignUpForm>{
+
   @override
   void dispose(){
     emailController.dispose();
@@ -33,15 +35,35 @@ class _SignUpFormState extends State<SignUpForm>{
     phoneController.dispose();
     super.dispose();
   }
-  Future addUserDetails(String name,String email,String phone,String password)async{
-    await FirebaseFirestore.instance.collection('users').add({
-        'name':name,
-        'email':email,
-        'phone':phone,
-        'password':password,
-    });
+ Future addUserDetails(String name, String email, String phone, String password) async {
+  // vérifier si l'e-mail est déjà enregistré
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('email', isEqualTo: email)
+      .limit(1)
+      .get();
+  
+  if (snapshot.docs.isNotEmpty) {
+                      Fluttertoast.showToast(
+  msg: "un compte existe déjà pour cet e-mail",
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.TOP_RIGHT,
+  backgroundColor: Colors.red,
+  textColor: Colors.white,
+);
+    throw Exception("Cet e-mail est déjà enregistré, veuillez en utiliser un autre.");
 
+  } else {
+    // enregistrer les détails de l'utilisateur
+    await FirebaseFirestore.instance.collection('users').add({
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'password': password,
+    });
   }
+}
+   String uid = "";
     String name = "";
     String email = "";
     String phoneNumber="";
@@ -188,7 +210,7 @@ controller: passwordController,
               // ignore: prefer_const_constructors
               decoration: InputDecoration(
                    errorText: _isNotValidate ?"Veuillez entrer un mot de passe (au moins 6 caractéres)":null,
-                hintText: "Your password",
+                hintText: "Mot de passe",
                 // ignore: prefer_const_constructors
                 prefixIcon: Padding(
                   padding: const EdgeInsets.all(defaultPadding),
@@ -231,47 +253,8 @@ MaterialPageRoute(builder: (context)=>LoginScreen()));
                  emailController.text.trim(),
                 phoneController.text.trim(),
                  passwordController.text.trim(),
+            
                     );
-            
-      /*  if(validateAndSave()){
-        setState(() {
-          isApiCallProcess=true;
-        });
-RegisterRequestModel model = LoginRequestModel(
-                    password: password !,
-                    email: email !,
-                     );
-        APIService.register(model).then(
-          (response) {
-            setState(() {
-              isApiCallProcess=false;
-            });
-            if(response.data !=null){
-              FormHelper.showSimpleAlertDialog(
-                context,
-                Config.appName,
-                "Inscription validée, veuillez connecter",
-                "ok",
-                (){
-                  Navigator.pushNamedAndRemoveUntil(context, 
-                 '/', (route) => false,
-                 );
-                },
-              );
-            }else{
-              FormHelper.showSimpleAlertDialog(context,
-              Config.appName,
-              response.message,
-              "ok",
-              (){
-                Navigator.of(context).pop();
-              },
-              );
-            }
-          },
-          ),
-        }*/
-            
            
   }, child: Text("S`inscrire".toUpperCase())),
 

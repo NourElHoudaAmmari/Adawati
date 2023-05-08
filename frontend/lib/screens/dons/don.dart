@@ -72,7 +72,7 @@ if (_imageFile == null) {
       final imageDownloadUrl = await _uploadImageToStorage(_imageFile!);
       final user =FirebaseAuth.instance.currentUser;
        final userId = user!= null? user.uid :null;
-         String? userName = user!=null?user.email :null;
+         String? userName = user!=null?user.displayName :null;
     String donId = FirebaseFirestore.instance.collection('dons').doc().id;
 
     await FirebaseFirestore.instance.collection('dons').doc(donId).set({
@@ -92,9 +92,7 @@ if (_imageFile == null) {
       setState(() {
         _isLoading = false;
       });
-      Navigator.push(context,
-    MaterialPageRoute(builder: (context) => DonList()),
-      );
+      Navigator.of(context).pop();
            ScaffoldMessenger.of(context).showSnackBar(
   SnackBar(
     backgroundColor: Colors.green,
@@ -425,7 +423,7 @@ if (_imageFile == null) {
     ),
     SizedBox(height: 10,),
  TextFormField(
-   keyboardType: TextInputType.number,
+    keyboardType: TextInputType.phone,
     maxLength: 8,
   controller: _phoneController,
   decoration: InputDecoration(

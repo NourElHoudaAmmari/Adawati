@@ -90,7 +90,7 @@ Future<String> uploadImageToFirebaseStorage(File file) async {
         backgroundColor: kontColor,
         iconTheme: IconThemeData(color: Colors.white),
         title: const Text(
-          'Edit Don',
+          'Modifier Don',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -267,6 +267,11 @@ Future<String> uploadImageToFirebaseStorage(File file) async {
                              ),
                 ),
                 SizedBox(height: 12),
+                Center(
+                  child:SizedBox(
+                    width : 300,
+                    height:50,
+                    child:
                 ElevatedButton(
                     onPressed: () async {
                       if (_key.currentState!.validate()) {
@@ -301,7 +306,9 @@ Future<String> uploadImageToFirebaseStorage(File file) async {
                     },
                     child: Text('Modifier'),
                     style: ElevatedButton.styleFrom(primary: kPrimaryColor),
-                    )
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

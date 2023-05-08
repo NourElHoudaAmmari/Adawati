@@ -99,7 +99,11 @@ children: [
     ),
     const SizedBox(width: 24),
      IconButton(
-      onPressed: (){},
+      onPressed: (){
+           Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Chat()),
+      );
+      },
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
@@ -168,9 +172,13 @@ children: [
       hintText: 'Rechercher',
       prefixIcon: Icon(Icons.search),
       border: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
         borderRadius: BorderRadius.circular(15),
       ),
+      
     ),
+    cursorColor: Colors.grey,
+    
   ),
 ),
 
@@ -263,13 +271,11 @@ children: [
                             Expanded(
                               child: thisItem.containsKey('image')
                                   ? Image.network('${thisItem['image']}')
-                                  :  Container(),
-                                
+                                  :  Container(),  
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text('${thisItem['title']}',
-                               
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,

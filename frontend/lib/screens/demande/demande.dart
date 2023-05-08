@@ -6,7 +6,10 @@ import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/demande/EditDemandeScreen.dart';
 import 'package:adawati/screens/demande/form_edit.dart';
 import 'package:adawati/screens/dons/don.dart';
+import 'package:adawati/screens/homepage/chat.dart';
+import 'package:adawati/screens/homepage/favoirs.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
+import 'package:adawati/screens/main_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +25,16 @@ class Demande extends StatefulWidget {
 }
 
 class _DemandeState extends State<Demande> {
+  late Stream<QuerySnapshot> _stream;
  final CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
 
-  
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
+  @override
+  void get initState{
+     super.initState;
+    //Create stream to listen to the 'items' collection
+    _stream = _demande.snapshots();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +74,11 @@ children: [
     ),
     const SizedBox(width: 24),
      IconButton(
-      onPressed: (){},
+      onPressed: (){
+    Navigator.push(context,
+    MaterialPageRoute(builder: (context) => Chat()),
+  );
+      },
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
@@ -80,39 +94,106 @@ children: [
          ),
          )
       ),
-   appBar: AppBar(
-    
-        title:  Text(
-          "Liste des demandes",
-          style: TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),
+        key: _key,
+        drawer: MainDrawer(),
+   appBar:AppBar(
+        title: Text(
+          "Adawati",
+          style: TextStyle(color: Colors.deepOrange[800], fontSize: 20,fontWeight: FontWeight.bold),
         ),
         elevation: 0.0,
-        backgroundColor:kPrimaryColor,
+
+        backgroundColor: Colors.grey[100],
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ), onPressed: () {  Navigator.push(context, 
-            MaterialPageRoute(builder: (context)=>HomePage()));},
-        ),actions: <Widget>[
+            Icons.menu,
+            color: Color.fromARGB(255, 103, 103, 103),
+          ),
+          onPressed: () {
+            _key.currentState?.openDrawer();
+          },
+        ),
+        // backgroundColor: Colors.transparent,
+        actions: <Widget>[
           IconButton(
               icon: Icon(
                 Icons.notifications_none,
-                color: Colors.white,
+                color: Color.fromARGB(255, 103, 103, 103),
               ),
               onPressed: () {}),
-         
         ],
-      
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 10,),
-              Container(
-                height: 500,
-                child: StreamBuilder<QuerySnapshot>(
+
+      body:  Column(
+        children: [
+           Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Row(
+    children: [
+  Expanded(
+  child: TextField(
+   // controller: _searchController,
+    onChanged: (value) {
+      setState(() {
+        _stream = _demande
+        .where('description', isEqualTo: value)
+        .snapshots();
+       //_stream = _reference.where('title', isEqualTo: value).snapshots();
+      });
+    },
+    decoration: InputDecoration(
+      hintText: 'Rechercher',
+      prefixIcon: Icon(Icons.search),
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      
+    ),
+    cursorColor: Colors.grey,
+    
+  ),
+),
+
+
+  IconButton(
+        onPressed: () {},
+        icon: Icon(Icons.filter_list,
+        color: Colors.deepOrange,),
+      ),
+    ],
+    
+  ),
+  
+),
+
+ Row(
+               children: [
+                     TextButton(
+                  onPressed: () {Navigator.push(context,
+                       MaterialPageRoute(
+                       builder: (context) =>HomePage()),
+                        );               
+                  },
+                  child: Text(  'Dons',
+                    style: TextStyle(fontSize:20 ,color: Colors.deepOrange[800], fontWeight: FontWeight.bold ),  ),),
+                     TextButton(onPressed: () {Navigator.push(
+                        context,
+                       MaterialPageRoute(
+                       builder: (context) =>Demande()),
+                        );
+                      },
+                      child: Text(
+                        'Demandes',
+                        style: TextStyle(fontSize:20, color: kontColor, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+  ],
+),
+
+          
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
                        stream: _demande.snapshots(),
                          builder: (context, AsyncSnapshot  snapshots) {
                   if (snapshots.connectionState == ConnectionState.waiting) {
@@ -151,9 +232,7 @@ children: [
               )
             ],
           ),
-        ),
-      ),
-    );
+        );
   }
 void _onButtomPressed(){
       showModalBottomSheet(
