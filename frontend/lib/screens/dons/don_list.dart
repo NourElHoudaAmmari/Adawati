@@ -4,6 +4,7 @@ import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/homepage/chat.dart';
+import 'package:adawati/screens/homepage/chathome_page.dart';
 import 'package:adawati/screens/homepage/favoirs.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,7 +35,7 @@ class _DonListState extends State<DonList> {
  late Map data;
   @override
   void  initState(){
-    super.initState;
+    super.initState();
      
    _stream = _reference.where('userId', isEqualTo: userId).snapshots();
   }
@@ -70,6 +71,16 @@ void _deleteDonation(String id) {
                           child: Text('OK'),
                           onPressed: () {
                             Navigator.of(context).pop();
+                             ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: Colors.green,
+      content: Text('Données supprimés avec succès!',),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+      elevation: 4,
+    ),
+  );
+     
                           },
                         ),
                       ],
@@ -149,7 +160,7 @@ children: [
      IconButton(
       onPressed: (){
               Navigator.push(context,
-    MaterialPageRoute(builder: (context) => Chat()),
+    MaterialPageRoute(builder: (context) => ChatHomePage()),
   );
       },
     icon: const Icon(Icons.chat),
@@ -199,11 +210,7 @@ children: [
             return Center(
                 child: Text('Some error occurred ${snapshot.error}'));
           }
-             if (snapshot.data!.size == 0) {
-            return Center(
-              child: Text('Aucun élément enregistré dans la liste des dons.'),
-            );
-          }
+            
           //Check if data arrived
           if (snapshot.hasData) {
             //get the data

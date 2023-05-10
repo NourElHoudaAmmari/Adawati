@@ -301,7 +301,15 @@ Future<String> uploadImageToFirebaseStorage(File file) async {
                           builder: (context) => DonDetails(data['id']), // Passer l'identifiant de l'élément à afficher
                         ),
                       );
-      
+       ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: Colors.green,
+      content: Text('Données modifiées avec succès!',),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+      elevation: 4,
+    ),
+  );
                       }
                     },
                     child: Text('Modifier'),

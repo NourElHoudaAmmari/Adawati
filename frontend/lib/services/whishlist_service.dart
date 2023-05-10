@@ -1,4 +1,4 @@
-import 'package:adawati/models/user.dart';
+import 'package:adawati/models/userModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_auth/firebase_auth.dart';

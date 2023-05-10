@@ -1,7 +1,7 @@
 
 import 'dart:io';
 
-import 'package:adawati/models/user.dart';
+import 'package:adawati/models/userModel.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -17,7 +17,7 @@ class UserRepository extends GetxController{
   final _db = FirebaseFirestore.instance;
 
 //store User in Firestore
-  createUser(User user) async {
+  createUser(UserModel user) async {
   await _db.collection("users").add(user.toJson()).whenComplete(() {
     Get.to(() => LoginScreen());
     print("succefully redirected"); // navigate to login screen
@@ -38,18 +38,18 @@ class UserRepository extends GetxController{
 }
 
 //Fetch all users or user details
-Future <User> getUserDetails(String email)async{
+Future <UserModel> getUserDetails(String email)async{
   final snapshot = await _db.collection("users").where("email",isEqualTo: email).get();
-  final userData = snapshot.docs.map((e) => User.fromSnapshot(e)).single;
+  final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
   return userData;
 }
 
-Future <List<User>> allUser()async{
+Future <List<UserModel>> allUser()async{
   final snapshot = await _db.collection("users").get();
-  final userData = snapshot.docs.map((e) => User.fromSnapshot(e)).toList();
+  final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList();
   return userData;
 }
-Future<void> updateUserRecord(User user)async{
+Future<void> updateUserRecord(UserModel user)async{
   await _db.collection("users").doc(user.id).update(user.toJson());
 
 

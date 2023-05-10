@@ -2,7 +2,7 @@ import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/demande_screen.dart';
-import 'package:adawati/models/user.dart';
+import 'package:adawati/models/userModel.dart';
 import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,19 +33,7 @@ class _MainDrawerState extends State<MainDrawer> {
    // fetchUserData();
   }
 
-   /* void fetchUserData() async {
-  User? currentUser = FirebaseAuth.instance.currentUser;
-  if (currentUser != null) {
-    DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
-    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
-    if (userData != null) {
-      setState(() {
-        name = userData['name'];
-       // email = userData['email'];
-      });
-    }
-  }
-}*/
+  
 void getUserData() async {
     final userEmail = _authRepo.firebaseUser.value?.email;
     if (userEmail != null) {

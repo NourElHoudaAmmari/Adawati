@@ -1,20 +1,24 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-class User{
-  final String? id;
-   final String name;
-    final String email;
+class UserModel{
+final String id;
+final String name;
+final String email;
 final String phone;
 final String? address;
-      final String? password;
-      final String? profilePick;
-      final bool? isBlocked;
+final String? password;
+final String profilePick;
+final bool isBlocked;
+final bool isOnline;
+final String lastActive;
+late String pushToken;
 
      
 
-  User({
-     this.id,
+  UserModel({
+    required this.id,
+   
    required  this.name,
      required this.email, 
      required this.phone, 
@@ -22,6 +26,10 @@ final String? address;
     required  this.password,
       required this.profilePick,
     this.isBlocked=false,
+    this.isOnline=false,
+    required this.lastActive,
+    required this.pushToken,
+  
     
      });
 
@@ -34,13 +42,18 @@ toJson(){
     "password":password,
       "profilePick":profilePick,
        "isBlocked":isBlocked,
+              "id":id,
+              "isOnline":isOnline,
+              "lastActive":lastActive,
+              "pushToken":pushToken,
+       
 
     };
 }
 
-factory User.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
+factory UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
   final data = document.data()!;
-  return User(
+  return UserModel(
     id:document.id,
     email:data["email"],
     password: data["password"],
@@ -48,7 +61,10 @@ factory User.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
     phone: data["phone"],
       address: data["address"],
             profilePick: data["profilePick"],
-              // isBlocked: data["isBlocked"],
+            isBlocked: data["isBlocked"],
+            isOnline: data["isOnline"],
+                lastActive:data["lastActive"]??'',
+                pushToken:data["pushToken"]??'',
      );
 }
     

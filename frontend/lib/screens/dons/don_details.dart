@@ -2,6 +2,7 @@ import 'package:adawati/providers/dons_provider.dart';
 import 'package:adawati/repository/user_repository.dart';
 import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/screens/homepage/chat.dart';
+import 'package:adawati/screens/homepage/chathome_page.dart';
 import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -197,67 +198,58 @@ Row(
     ),
   ],
 ),
-                
-                 SizedBox(height: 10),
-                 const Text(
-                   "Informations :",
-                   style: TextStyle(
-                     fontSize: 20,
-                     fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,
-                     color:Colors.black,
-                   ),
-                   textAlign: TextAlign.left,
-                 ),
                  SizedBox(height: 8),
-                     Column(
+                     Row(
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     Text(
-      'Categorie',
+      'Categorie : ',
       style: TextStyle(
         color: Colors.grey[800],
-        fontSize: 18,
+        fontSize: 20,
         fontStyle: FontStyle.italic,
         fontWeight: FontWeight.bold,
       ),
     ),
-    SizedBox(height: 6,),
+    
   
-                Row(
-  children: [
-    Icon(Icons.category, color: kPrimaryColor),
-     SizedBox(width: 8),
+     SizedBox(width: 63),
+       Icon(Icons.category, color: kPrimaryColor),
+       SizedBox(width: 6,),
     Text(
       '${data['categorie']}',
       style: const TextStyle(
-        fontSize: 16,
-        color: Color.fromARGB(255, 118, 117, 117),
-      ),
-      textAlign: TextAlign.left,
-    ),
-  ],
-),
-  ],
-                     ),
-                     SizedBox(height: 10,),
-  Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Text(
-      'Etat',
-      style: TextStyle(
-        color: Colors.grey[800],
         fontSize: 18,
-        fontStyle: FontStyle.italic,
-         fontWeight: FontWeight.bold,
+
+        color: Color.fromARGB(255, 118, 117, 117),
       ),
       textAlign: TextAlign.right,
     ),
-    SizedBox(height: 6,),
+ 
+  ],
+  ),
+                     SizedBox(height: 16,),
+  Row(
+    
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Text(
+      'Etat :',
+      style: TextStyle(
+        color: Colors.grey[800],
+        fontSize: 20,
+        fontStyle: FontStyle.italic,
+         fontWeight: FontWeight.bold,
+      ),
+      textAlign: TextAlign.left
+    ), 
+    SizedBox(width: 123,),
+    Icon(Icons.star_rate_outlined, color: kPrimaryColor),
+       SizedBox(width: 6,),
                  Text(
                    '${data['etat']}',
                    style: const TextStyle(
-                     fontSize: 16,
+                     fontSize: 18,
                     fontStyle: FontStyle.normal,
                      color:Color.fromARGB(255, 118, 117, 117),
                    ),
@@ -265,47 +257,45 @@ Row(
                  ),
                  ],
                 ),
-                SizedBox(height: 10,),
-                Column(
+                SizedBox(height: 16,),
+                Row(
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
      Text(
-      'Adresse',
+      'Adresse :',
       style: TextStyle(
         color: Colors.grey[800],
-        fontSize: 18,
+        fontSize: 20,
         fontStyle: FontStyle.italic,
          fontWeight: FontWeight.bold,
       ),
       textAlign: TextAlign.left,
     ),
-     SizedBox(height: 6,),
-                 Row(
-  children: [
-    Icon(Icons.place, color: Colors.grey),
-     SizedBox(width: 8),
+    SizedBox(width: 86,),
+    Icon(Icons.place, color: kPrimaryColor),
+     SizedBox(width: 6),
     Text(
       '${data['adresse']}',
       style: const TextStyle(
-        fontSize: 16,
+        fontSize: 18,
         color: Color.fromARGB(255, 118, 117, 117),
       ),
       textAlign: TextAlign.left,
     ),
-  ],
-),
+
                  ],
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 15,),
                
              
     
                 Divider(thickness: 2,),
+                SizedBox(height: 8,),
                          Column(
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
      Text(
-      'Description',
+      'Description :',
       style: TextStyle(
         color: Colors.grey[800],
         fontSize: 20,
@@ -314,7 +304,7 @@ Row(
       ),
       textAlign: TextAlign.left,
     ),
-     SizedBox(height: 6,),
+     SizedBox(height: 8,),
                 
                    Text(
                    '${data['description']}',
@@ -326,12 +316,21 @@ Row(
                  ),
   ],
                          ),
-                         SizedBox(height: 12,),
+                         SizedBox(height: 133,),
                   Container(
-  decoration: BoxDecoration(
-    border: Border.all(color: Colors.white),
-    borderRadius: BorderRadius.circular(8),
-  ),
+
+    decoration: BoxDecoration(
+      
+      borderRadius: BorderRadius.circular(16), // Adjust the border radius as needed
+      boxShadow: [
+        BoxShadow(
+          color: Colors.white.withOpacity(0.8),
+          spreadRadius: 2,
+          blurRadius: 3,
+          offset: Offset(0, 2), // controls the position of the shadow
+        ),
+      ],
+    ),
   child: Row(
     children: <Widget>[
       SizedBox(width: 1),
@@ -386,7 +385,7 @@ if(await canLaunchUrl(url)){
       InkWell(
         onTap: () {
              Navigator.push(context,
-    MaterialPageRoute(builder: (context) => Chat()),
+    MaterialPageRoute(builder: (context) => ChatHomePage()),
   );
         },
         child: IconoMenu(
@@ -399,8 +398,9 @@ if(await canLaunchUrl(url)){
     ],
   ),
 ),
-
+                  
                ],
+             
              ),
            ),
            );
