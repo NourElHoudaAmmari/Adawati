@@ -2,7 +2,7 @@ import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/demande_screen.dart';
-import 'package:adawati/models/user.dart';
+import 'package:adawati/models/userModel.dart';
 import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,11 +26,15 @@ class _MainDrawerState extends State<MainDrawer> {
        String imageUrl = '';
  File? _imageFile;
        @override
-  void get initState {
+  void initState () {
     super.initState;
     getUserData();
   }
 
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 7866b98a0982c5e6d2490c5d18b3438b7012852b
 void getUserData() async {
     final userEmail = _authRepo.firebaseUser.value?.email;
     if (userEmail != null) {

@@ -7,6 +7,7 @@ import 'package:adawati/screens/demande/EditDemandeScreen.dart';
 import 'package:adawati/screens/demande/form_edit.dart';
 import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/homepage/chat.dart';
+import 'package:adawati/screens/homepage/chathome_page.dart';
 import 'package:adawati/screens/homepage/favoirs.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -73,7 +74,7 @@ children: [
      IconButton(
       onPressed: (){
               Navigator.push(context,
-    MaterialPageRoute(builder: (context) => Chat()),
+    MaterialPageRoute(builder: (context) => ChatHomePage()),
   );
       },
     icon: const Icon(Icons.chat),

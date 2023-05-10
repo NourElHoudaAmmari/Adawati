@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:adawati/models/user.dart';
+import 'package:adawati/models/userModel.dart';
 import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/repository/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +26,11 @@ if(email !=null){
   Get.snackbar("Erreur", "Login pour continuer");
 }
   }
-  Future<List<User>> getAllUser()async{
+  Future<List<UserModel>> getAllUser()async{
     return await _userRepo.allUser();
   }
 
-  updateRecord(User user)async{
+  updateRecord(UserModel user)async{
     await _userRepo.updateUserRecord(user);
   }
   uploadImage(File image)async{

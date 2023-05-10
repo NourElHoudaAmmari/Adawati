@@ -2,6 +2,7 @@ import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
 import 'package:adawati/screens/dons/don.dart';
 import 'package:adawati/screens/dons/don_details.dart';
+import 'package:adawati/screens/homepage/chathome_page.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,7 +21,7 @@ class Favoirs extends StatefulWidget {
 class _FavoirsState extends State<Favoirs> {
     late WhishListService _service;
      @override
- void get initState{
+ void initState(){
    super.initState;
     _service = WhishListService();
  
@@ -65,7 +66,11 @@ children: [
     ),
     const SizedBox(width: 24),
      IconButton(
-      onPressed: (){},
+      onPressed: (){
+                 Navigator.push(context,
+    MaterialPageRoute(builder: (context) => ChatHomePage()),
+  );
+      },
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){

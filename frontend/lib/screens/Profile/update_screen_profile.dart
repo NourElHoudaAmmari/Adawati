@@ -4,7 +4,7 @@ import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:adawati/controllers/profile_controller.dart';
 import 'package:adawati/helpers/constants.dart';
-import 'package:adawati/models/user.dart';
+import 'package:adawati/models/userModel.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +25,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   TextEditingController addressController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController id = TextEditingController();
+    TextEditingController lastActive = TextEditingController();
+      TextEditingController pushToken= TextEditingController();
   TextEditingController _imageController  = TextEditingController();
 
    File? _imageFile;
@@ -70,7 +72,7 @@ Future<String> _uploadImageToStorage(File file) async {
             builder: (context,snapshot){
               if(snapshot.connectionState == ConnectionState.done){
 if(snapshot.hasData){
-  User user = snapshot.data as User;
+  UserModel user = snapshot.data as UserModel;
   imageUrl = user.profilePick!;
   final id = TextEditingController(text: user.id);
   final email =TextEditingController(text: user.email);
@@ -205,7 +207,7 @@ if(snapshot.hasData){
                           onPressed:() async {
                              final profilePicUrl = _imageFile != null ? await _uploadImageToStorage(_imageFile!) : '';
                            // String imagePath = '';
-                            final userData =User(
+                            final userData =UserModel(
                               id : id.text,
                              email: email.text.trim(),
                              password: password.text.trim(),
@@ -214,6 +216,8 @@ if(snapshot.hasData){
                              address: address.text.trim(),
                             // profilePick:_imageURL, 
                               profilePick: profilePicUrl,
+                              lastActive: lastActive.text,
+                              pushToken: pushToken.text,
                              );
                               
   try {
@@ -227,6 +231,9 @@ if(snapshot.hasData){
       elevation: 4,
     ),
   );
+        Navigator.push(context,
+    MaterialPageRoute(builder: (context) => ProfileScreen()),
+      );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
          

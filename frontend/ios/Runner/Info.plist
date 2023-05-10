@@ -10,7 +10,8 @@
 <string> To capture profile photo please grant camera access</string>
 <key>NSPhotoLibraryUsageDescription</key>
 <string>App needs access to photo lib for profile images</string>
-
+<key>NSPhotoLibraryUsageDescription</key>
+<string>App requires read and write access to the photo library.</string>
 <key>CFBundleURLTypes</key>
 <array>
   <dict>

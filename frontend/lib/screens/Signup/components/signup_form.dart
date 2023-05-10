@@ -26,6 +26,7 @@ class SignUpForm extends StatefulWidget {
   _SignUpFormState createState()=> _SignUpFormState();
 }
 class _SignUpFormState extends State<SignUpForm>{
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void dispose(){
@@ -35,24 +36,23 @@ class _SignUpFormState extends State<SignUpForm>{
     phoneController.dispose();
     super.dispose();
   }
- Future addUserDetails(String name, String email, String phone, String password ,String profilePick) async {
-  // vérifier si l'e-mail est déjà enregistré
+Future<void> addUserDetails(String name, String email, String phone, String password, String profilePick, String id, bool isBlocked, String lastActive, String pushToken, bool isOnline) async {
+  final time = DateTime.now().microsecondsSinceEpoch.toString();
   final snapshot = await FirebaseFirestore.instance
       .collection('users')
       .where('email', isEqualTo: email)
       .limit(1)
       .get();
-  
-  if (snapshot.docs.isNotEmpty) {
-                      Fluttertoast.showToast(
-  msg: "un compte existe déjà pour cet e-mail",
-  toastLength: Toast.LENGTH_SHORT,
-  gravity: ToastGravity.TOP_RIGHT,
-  backgroundColor: Colors.red,
-  textColor: Colors.white,
-);
-    throw Exception("Cet e-mail est déjà enregistré, veuillez en utiliser un autre.");
 
+  if (snapshot.docs.isNotEmpty) {
+    Fluttertoast.showToast(
+      msg: "un compte existe déjà pour cet e-mail",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP_RIGHT,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+    throw Exception("Cet e-mail est déjà enregistré, veuillez en utiliser un autre.");
   } else {
     // enregistrer les détails de l'utilisateur
     await FirebaseFirestore.instance.collection('users').add({
@@ -60,22 +60,36 @@ class _SignUpFormState extends State<SignUpForm>{
       'email': email,
       'phone': phone,
       'password': password,
-      'profilePick':profilePick,
+      'profilePick': profilePick,
+      'id': auth.currentUser!.uid,
+      'isBlocked': isBlocked,
+      'lastActive': time,
+       'pushToken': pushToken,
+      'isOnline': isOnline,
+     
     });
   }
 }
-   String uid = "";
+   String id = "";
     String name = "";
     String email = "";
     String phoneNumber="";
     String password = "";
     String profilePick="";
+    bool isBlocked = false;
+    String lastActive = "";
+    bool isOnline = false;
+    String pushToken="";
  TextEditingController emailController = TextEditingController();
- 
+  TextEditingController idController = TextEditingController();
   TextEditingController profilePickController = TextEditingController();
  TextEditingController passwordController = TextEditingController();
    TextEditingController nameController = TextEditingController();
    TextEditingController phoneController = TextEditingController();
+   TextEditingController pushTokenController = TextEditingController();
+   TextEditingController lastActiveController = TextEditingController();
+   TextEditingController isBlockedController = TextEditingController();
+   TextEditingController isOnlineController = TextEditingController();
    bool _isNotValidate = false;
    Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
@@ -258,7 +272,11 @@ MaterialPageRoute(builder: (context)=>LoginScreen()));
                 phoneController.text.trim(),
                  passwordController.text.trim(),
                  profilePickController.text.trim(),
-            
+                 idController.text.trim(),
+                 isBlocked,
+                 lastActiveController.text.trim(),
+                 pushTokenController.text.trim(),
+                 isOnline,
                     );
            
   }, child: Text("S`inscrire".toUpperCase())),

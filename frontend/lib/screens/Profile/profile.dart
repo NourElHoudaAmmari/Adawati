@@ -24,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
      String imageUrl = '';
  File? _imageFile;
  @override
-void get initState {
+void initState() {
   super.initState;
    getUserData();
 }

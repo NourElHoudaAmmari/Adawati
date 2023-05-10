@@ -1,5 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, avoid_returning_null_for_void, must_be_immutable, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
 import 'package:adawati/helpers/constants.dart';
+import 'package:adawati/screens/homepage/chathome_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
@@ -20,6 +21,9 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+Future<void> _refresh(){
+  return Future.delayed(Duration(seconds: 2));
+}
 
 class _HomePageState extends State<HomePage> {
    TextEditingController _searchController = TextEditingController();
@@ -33,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   late String _searchCategory = ''; // Added variable to store search category
   late String _searchTitle = '';
   @override
-  void get initState{
+  void  initState(){
     super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _reference.snapshots();
@@ -101,7 +105,7 @@ children: [
      IconButton(
       onPressed: (){
            Navigator.push(context,
-    MaterialPageRoute(builder: (context) => Chat()),
+    MaterialPageRoute(builder: (context) => ChatHomePage()),
       );
       },
     icon: const Icon(Icons.chat),
@@ -245,91 +249,94 @@ children: [
                   }).toList();
   
                   //Display the grid
-                  return GridView.builder(
-                    padding: EdgeInsets.all(8),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, //Number of columns
-                      childAspectRatio: 0.7, //Ratio of height to width of each grid item
-                    ),
-                    itemCount: items.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      //Get the item at this index
-                      Map thisItem = items[index];
-                      //Return the widget for the grid item
-                      return Card(
-                        child: GestureDetector(
-                       onTap: () {Navigator.push(
-                        context,
-                       MaterialPageRoute(
-                       builder: (context) =>DonDetails(thisItem['id'])),
-                        );
-                       // Naviguer vers la page souhaitée
-                            },
-                        child: Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: thisItem.containsKey('image')
-                                  ? Image.network('${thisItem['image']}')
-                                  :  Container(),  
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${thisItem['title']}',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic,
-                                  color: kontColor
+                  return RefreshIndicator(
+                    onRefresh: _refresh,
+                    child: GridView.builder(
+                      padding: EdgeInsets.all(8),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, //Number of columns
+                        childAspectRatio: 0.7, //Ratio of height to width of each grid item
+                      ),
+                      itemCount: items.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        //Get the item at this index
+                        Map thisItem = items[index];
+                        //Return the widget for the grid item
+                        return Card(
+                          child: GestureDetector(
+                         onTap: () {Navigator.push(
+                          context,
+                         MaterialPageRoute(
+                         builder: (context) =>DonDetails(thisItem['id'])),
+                          );
+                         // Naviguer vers la page souhaitée
+                              },
+                          child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: thisItem.containsKey('image')
+                                    ? Image.network('${thisItem['image']}')
+                                    :  Container(),  
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('${thisItem['title']}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic,
+                                    color: kontColor
+                                  ),
                                 ),
                               ),
-                            ),
-                            Divider(thickness: 1,),
-                            Column(
-                              children: [
-
-                            
-                       Row(
-  children: [
-    Icon(Icons.place_outlined, color: Colors.grey.shade500,),
-    SizedBox(width: 5), // Espacement entre l'icône et le texte
-    Text(
-      '${thisItem['adresse']}',
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.normal,
-        color: Colors.grey.shade500,
-        fontStyle: FontStyle.italic,
-      ),
-    ),
-  ],
-),
-const SizedBox(height: 5.0,),
-                   Row(
-  children: [
-    Icon(Icons.alarm, color: Colors.grey.shade500),
-    SizedBox(width: 5), // Espacement entre l'icône et le texte
-   Text(
-  '${DateFormat('dd-MM-yyyy').format(thisItem['createdAt'].toDate())}',
-  style: TextStyle(
-    fontSize: 13,
-    fontWeight: FontWeight.normal,
-    color: Colors.grey.shade500,
-    fontStyle: FontStyle.italic,
-  ),
-),
-  ],
-),
-  ],
-                            ),
-
-                          ],
+                              Divider(thickness: 1,),
+                              Column(
+                                children: [
+                  
+                              
+                         Row(
+                    children: [
+                      Icon(Icons.place_outlined, color: Colors.grey.shade500,),
+                      SizedBox(width: 5), // Espacement entre l'icône et le texte
+                      Text(
+                        '${thisItem['adresse']}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey.shade500,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
-                      );
-                    },
+                    ],
+                  ),
+                  const SizedBox(height: 5.0,),
+                     Row(
+                    children: [
+                      Icon(Icons.alarm, color: Colors.grey.shade500),
+                      SizedBox(width: 5), // Espacement entre l'icône et le texte
+                     Text(
+                    '${DateFormat('dd-MM-yyyy').format(thisItem['createdAt'].toDate())}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.grey.shade500,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                    ],
+                  ),
+                    ],
+                              ),
+                  
+                            ],
+                          ),
+                        ),
+                        );
+                      },
+                    ),
                   );
                 }
           
