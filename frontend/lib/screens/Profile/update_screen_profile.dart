@@ -1,20 +1,14 @@
 import 'dart:io';
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:adawati/controllers/profile_controller.dart';
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/models/user.dart';
 import 'package:adawati/screens/Profile/profile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Path;
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});
@@ -32,7 +26,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController id = TextEditingController();
   TextEditingController _imageController  = TextEditingController();
-   String _imageURL = '';
+
    File? _imageFile;
    bool isObscure = true; // Step 1: Add isObscure variable
 Future<void> _pickImage(ImageSource source) async {
@@ -88,74 +82,75 @@ if(snapshot.hasData){
     
     child: Column(
                 children: [
-                   Stack(
+  Stack(
   children: [
-    
     SizedBox(
       width: 120,
       height: 120,
-      
-      child:InkWell(
-         onTap: () async {
-    await showModalBottomSheet(
-      context: context,
-      builder: (_) => BottomSheet(
-        onClosing: () {},
-        builder: (_) => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text('Take a photo'),
-              leading: Icon(Icons.camera_alt),
-              onTap: () {
-                _pickImage(ImageSource.camera);
-                Navigator.of(context).pop();
-              },
+      child: InkWell(
+        onTap: () async {
+          await showModalBottomSheet(
+            context: context,
+            builder: (_) => BottomSheet(
+              onClosing: () {},
+              builder: (_) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text('Take a photo'),
+                    leading: Icon(Icons.camera_alt),
+                    onTap: () {
+                      _pickImage(ImageSource.camera);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Choose from gallery'),
+                    leading: Icon(Icons.photo_library),
+                    onTap: () {
+                      _pickImage(ImageSource.gallery);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
             ),
-            ListTile(
-              title: Text('Choose from gallery'),
-              leading: Icon(Icons.photo_library),
-              onTap: () {
-                _pickImage(ImageSource.gallery);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  },
-        child:ClipRRect(
-          
-         borderRadius: BorderRadius.circular(150),
-          child: imageUrl.isNotEmpty
-            ? Image.network(
-                imageUrl,
-                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                        : null,
-                    ),
-                  );
-                },
-              )
-            : Image.asset('assets/images/profile_pic.png'),
+          );
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(150),
+          child: _imageFile != null
+            ? Image.file(_imageFile!, fit: BoxFit.cover)
+            : imageUrl.isNotEmpty
+              ? Image.network(
+                  imageUrl,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                      ),
+                    );
+                  },
+                )
+              : Image.asset('assets/images/profile_pic.png'),
         ),
       ),
     ),
   ],
 ),
 
+
                   const SizedBox(height: 50),
                   Form(
                     child:Column(
                       children: [
                         //const SizedBox(height:9),
+                      
                           TextFormField(
                             controller: name,
                           decoration: InputDecoration(
@@ -254,16 +249,7 @@ if(snapshot.hasData){
   ),
   
                           ),
-                          
-                         //ElevatedButton(
-                          //onPressed:(){},
-                          //style: ElevatedButton.styleFrom(
-                            //backgroundColor: Colors.orange.withOpacity(0.2),
-                            //elevation: 0,
-                            //side: BorderSide.none,
-                            //shape: const StadiumBorder()),
-                            //child: const Text("Cancel", style: TextStyle(color: Colors.white)),
-                          // )
+                 
                       ],
                     )) 
                 ]

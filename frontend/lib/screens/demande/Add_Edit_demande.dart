@@ -7,6 +7,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_helpers/firebase_helpers.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../../repository/authentification_repository.dart';
+import '../../repository/user_repository.dart';
 
 class MyPopup extends StatelessWidget {
   const MyPopup({Key? key}) : super(key: key);
@@ -24,6 +29,7 @@ class MyPopup extends StatelessWidget {
 }
  
 class AddEditDemande extends StatefulWidget {
+  
  final DemandeModel? demande;
 final index;
 AddEditDemande({this.demande, this.index,});
@@ -37,25 +43,48 @@ class _AddEditDemandeState extends State<AddEditDemande> {
   bool isedit = false;
   final TextEditingController description = TextEditingController();
   final TextEditingController id = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  
+  //final FirebaseAuth _auth = FirebaseAuth.instance;
     String? userId;
-  String? userName;
-
-
+  //String? userName;
+ final _authRepo = Get.put(AuthentificationRepository());
+  final _userRepo = Get.put(UserRepository());
+  String name = '';
+  String email = '';
+  final TextEditingController nameController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
   @override
-  void init(){
-    if(widget.index != null){
-      isedit = true;
-     id.text = widget.demande?.id;
-     description.text = widget.demande?.description;
+ void  get initState {
+  super.initState;
+  if(widget.index != null){
+    isedit = true;
+    id.text = widget.demande?.id;
+    description.text = widget.demande?.description;
+  } else {
+    isedit = false;
+  }
+
+   nameController.text = name;
+  emailController.text = email;
+  }
+    void getUserData() async {
+    final user = _authRepo.firebaseUser.value;
+    if (user != null) {
+      final userEmail = user.email;
+      if (userEmail != null) {
+        final userModel = await _userRepo.getUserDetails(userEmail);
+        setState(() {
+          name = userModel.name;
+          email = userEmail;
+ 
+        });
+      }
     }
-    else{
-      isedit = false;
-    }
-    super.initState;
   }
    @override
   Widget build(BuildContext context) {
+     getUserData();
     return Scaffold(
   appBar: AppBar(
         title: Center(child: 
@@ -119,21 +148,24 @@ class _AddEditDemandeState extends State<AddEditDemande> {
                 onPressed: () async {
   if (_form_Key.currentState!.validate()) {
     _form_Key.currentState!.save();
-     final user =FirebaseAuth.instance.currentUser;
-           final userId = user!= null? user.uid :null;
-         String? userName = user!=null?user.email :null;
+    final user = FirebaseAuth.instance.currentUser;
+     final userId = user!= null? user.uid :null;
+
     if (isedit == true) {
       DemandeController().update_demande(DemandeModel(
         id: id.text,
         description: description.text,
         userId: userId,
-        userName: userName,
+        userName: name, 
+        createdAt: DateTime.now()
       ));
     } else {
       DemandeController().add_demande(DemandeModel(
         description: description.text,
         userId: userId,
-        userName: userName,
+        userName: name,
+        userEmail: email, 
+        createdAt: DateTime.now()
       ));
     }
     Navigator.push(

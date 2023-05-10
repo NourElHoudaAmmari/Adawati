@@ -14,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 
 import '../homepage/favoirs.dart';
 
@@ -207,15 +208,32 @@ children: [
                        itemBuilder: (context, index) {
                        final DocumentSnapshot records = snapshots.data!.docs[index];
                        return Padding(
-                         padding: const EdgeInsets.symmetric(vertical: 10),
+                         padding: const EdgeInsets.all(8),
                          child: Slidable(
-                          
-                                  
-                              child: ListTile(
-                                tileColor: Colors.grey[200],
-                                title: Text(records["description"]),
-                    
-                                    ),
+                                child: SizedBox(
+                                   height: 90, 
+                 child: Card(
+  child: ListTile(
+    tileColor: Colors.lightBlue[50],
+    title: Text(records["description"]),
+    subtitle: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 8), // Ajouter un espacement de 8 pixels
+        Text(records["userName"]),
+        const SizedBox(height: 4), // Ajouter un espacement de 4 pixels
+        Text(records["userEmail"]),
+      ],
+    ),
+    trailing: Text(
+      DateFormat('dd-MM-yyyy').format(records['createdAt'].toDate()),
+      style: TextStyle(color: Colors.deepOrange[800]),
+    ),
+  ),
+),
+               ),
+                                    
+                                    
                                       ),
                        );
                                       },

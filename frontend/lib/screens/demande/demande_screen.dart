@@ -170,7 +170,7 @@ children: [
           }
         },
         icon: Icons.edit_note,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
       ),
                                 ],
                                      ),
@@ -194,7 +194,7 @@ children: [
               },
             ),
             TextButton(
-              child: Text('Oui'),
+              child: Text('Oui' , style: TextStyle(color: Colors.red),),
               onPressed: () {
                 DemandeController().delete_demande(DemandeModel(id: records.id));
                 Navigator.of(context).pop();
