@@ -149,7 +149,7 @@ if (_imageFile == null) {
     }
   }
   @override
-   void initState(){
+   void get initState{
     super.initState;
     getUserData();
     

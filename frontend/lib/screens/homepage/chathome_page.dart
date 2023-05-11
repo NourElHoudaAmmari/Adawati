@@ -20,8 +20,8 @@ List<UserModel> list=[];
 final List<UserModel> _searchList = [];
 bool _isSearching = false;
 @override
-void initState(){
-  super.initState();
+void get initState{
+  super.initState;
   APIs.getSelfInfo();
   APIs.getFirebaseMessagingToken();
     APIs.updateActiveStatus(true);
@@ -95,7 +95,7 @@ return Future.value(message);
               case ConnectionState.active:
               case ConnectionState.done:
               final data = snapshot.data!.docs;
-          list = data?.map((e) => UserModel.fromSnapshot(e)).toList() ?? [];
+          list = data.map((e) => UserModel.fromSnapshot(e)).toList() ?? [];
           
           if(list.isNotEmpty){
           

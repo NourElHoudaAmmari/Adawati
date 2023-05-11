@@ -24,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
      String imageUrl = '';
  File? _imageFile;
  @override
-void initState() {
+void get initState {
   super.initState;
    getUserData();
 }
@@ -35,7 +35,7 @@ void getUserData() async {
       setState(() {
         name = user.name;
         email = userEmail;
-        imageUrl = user.profilePick!;
+        imageUrl = user.profilePick;
       });
     }
   }

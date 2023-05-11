@@ -73,7 +73,7 @@ Future<String> _uploadImageToStorage(File file) async {
               if(snapshot.connectionState == ConnectionState.done){
 if(snapshot.hasData){
   UserModel user = snapshot.data as UserModel;
-  imageUrl = user.profilePick!;
+  imageUrl = user.profilePick;
   final id = TextEditingController(text: user.id);
   final email =TextEditingController(text: user.email);
     final password =TextEditingController(text: user.password);

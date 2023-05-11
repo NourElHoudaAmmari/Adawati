@@ -9,6 +9,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:uuid/uuid.dart';
 //import'package:adawati/screens/Signup/components/socal_sign_up.dart';
 import '../../../components/already_have_an_account_acheck.dart';
 import '../../../helpers/constants.dart';
@@ -55,13 +56,14 @@ Future<void> addUserDetails(String name, String email, String phone, String pass
     throw Exception("Cet e-mail est déjà enregistré, veuillez en utiliser un autre.");
   } else {
     // enregistrer les détails de l'utilisateur
+   // usersCollectionRef.doc(userUid).set({
     await FirebaseFirestore.instance.collection('users').add({
       'name': name,
       'email': email,
       'phone': phone,
       'password': password,
       'profilePick': profilePick,
-      'id': auth.currentUser!.uid,
+      'id':id,
       'isBlocked': isBlocked,
       'lastActive': time,
        'pushToken': pushToken,
@@ -347,4 +349,3 @@ MaterialPageRoute(builder: (context)=>LoginScreen()));
   }
 
 }
-

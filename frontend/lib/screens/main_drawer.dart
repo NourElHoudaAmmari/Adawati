@@ -26,15 +26,12 @@ class _MainDrawerState extends State<MainDrawer> {
        String imageUrl = '';
  File? _imageFile;
        @override
-  void initState () {
+  void get initState  {
     super.initState;
     getUserData();
   }
 
-<<<<<<< HEAD
-=======
   
->>>>>>> 7866b98a0982c5e6d2490c5d18b3438b7012852b
 void getUserData() async {
     final userEmail = _authRepo.firebaseUser.value?.email;
     if (userEmail != null) {
@@ -42,7 +39,7 @@ void getUserData() async {
       setState(() {
         name = user.name;
         email = userEmail;
-        imageUrl = user.profilePick!;
+        imageUrl = user.profilePick;
       });
     } 
   }
