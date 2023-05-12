@@ -9,6 +9,7 @@ import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:flutter/material.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'dart:io';
 import 'package:adawati/repository/user_repository.dart';
 import '../helpers/constants.dart';
 class MainDrawer extends StatefulWidget {
@@ -20,17 +21,14 @@ class MainDrawer extends StatefulWidget {
 class _MainDrawerState extends State<MainDrawer> {
    final _authRepo = Get.put(AuthentificationRepository());
   final _userRepo = Get.put(UserRepository());
-  /* final user =FirebaseAuth.instance.currentUser;
-    final CollectionReference usersRef =
-      FirebaseFirestore.instance.collection("users");*/
      String name = '';
      String email ='';
+       String imageUrl = '';
+ File? _imageFile;
        @override
-  void initState () {
+  void  initState () {
     super.initState;
     getUserData();
-    
-   // fetchUserData();
   }
 
   
@@ -41,11 +39,9 @@ void getUserData() async {
       setState(() {
         name = user.name;
         email = userEmail;
+        imageUrl = user.profilePick;
       });
-    } else {
-  print(name);
-  print(email);
-    }
+    } 
   }
   @override
   Widget build(BuildContext context) {
@@ -67,12 +63,28 @@ Container(
             top: 30,
             bottom: 10,
           ),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(image: AssetImage( "assets/images/profile_pic.png",),
-            fit: BoxFit.fill),
-            
-          ),
+            child: ClipRRect(
+          borderRadius: BorderRadius.circular(150),
+          child: _imageFile != null
+            ? Image.file(_imageFile!, fit: BoxFit.cover)
+            : imageUrl.isNotEmpty
+              ? Image.network(
+                  imageUrl,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                      ),
+                    );
+                  },
+                )
+              : Image.asset('assets/images/profile_pic.png'),
+        ),
         ),
         Text(  
   name,

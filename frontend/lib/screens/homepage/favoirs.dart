@@ -21,7 +21,7 @@ class Favoirs extends StatefulWidget {
 class _FavoirsState extends State<Favoirs> {
     late WhishListService _service;
      @override
- void initState(){
+ void  initState(){
    super.initState;
     _service = WhishListService();
  

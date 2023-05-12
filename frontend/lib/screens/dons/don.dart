@@ -6,6 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:core';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
@@ -18,6 +22,24 @@ class DonPage extends StatefulWidget {
   State<DonPage> createState() => _DonPageState();
 }
 class _DonPageState extends State<DonPage> {
+  
+List<String> _getUsersToNotify() {
+  List<String> usersToNotify = [];
+
+  FirebaseFirestore.instance.collection('users').get().then((querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      String email = doc.data()['email'];
+      usersToNotify.add(email);
+    });
+  });
+
+  return usersToNotify;
+}
+
+
+
+
+  
    final _authRepo = Get.put(AuthentificationRepository());
   final _userRepo = Get.put(UserRepository());
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -127,7 +149,7 @@ if (_imageFile == null) {
     }
   }
   @override
-   void initState(){
+   void  initState(){
     super.initState;
     getUserData();
     

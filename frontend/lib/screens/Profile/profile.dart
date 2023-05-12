@@ -1,14 +1,13 @@
+import 'dart:io';
 import 'package:adawati/helpers/constants.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:adawati/repository/authentification_repository.dart';
 import 'package:adawati/screens/Login/login_screen.dart';
 import 'package:adawati/screens/Profile/update_screen_profile.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:adawati/widget/profile_menu.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:adawati/repository/user_repository.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -20,19 +19,13 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
      final _authRepo = Get.put(AuthentificationRepository());
   final _userRepo = Get.put(UserRepository());
- /* final user =FirebaseAuth.instance.currentUser;
-  
-   final CollectionReference usersRef =
-      FirebaseFirestore.instance.collection("users");*/
      String name = '';
      String email ='';
      String imageUrl = '';
-      String profilePick =  '';
-
+ File? _imageFile;
  @override
-void initState() {
+void  initState() {
   super.initState;
-  //fetchUserData();
    getUserData();
 }
 void getUserData() async {
@@ -42,30 +35,10 @@ void getUserData() async {
       setState(() {
         name = user.name;
         email = userEmail;
-      });
-    } else {
-  
-    }
-  }
-
-/*void fetchUserData() async {
-  User? currentUser = FirebaseAuth.instance.currentUser;
-  if (currentUser != null) {
-    DocumentSnapshot userDoc = await usersRef.doc(currentUser.uid).get();
-    Map<String, dynamic>? userData =
-        userDoc.data() as Map<String, dynamic>?;
-    if (userData != null) {
-      setState(() {
-        name = userData['name'];
-       email = userData['email'];
-        imageUrl = userData['profilePick'];
-        profilePick = userData['profilePick'];
-
+        imageUrl = user.profilePick;
       });
     }
   }
-}*/
-
   @override
   Widget build(BuildContext context) {
    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -91,25 +64,27 @@ void getUserData() async {
       width: 120,
       height: 120,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: imageUrl.isNotEmpty
-          ? Image.network(
-              imageUrl,
-              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) {
-                  return child;
-                }
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                      : null,
-                  ),
-                );
-              },
-            )
-          : Image.asset('assets/images/profile_pic.png'),
-      ),
+          borderRadius: BorderRadius.circular(150),
+          child: _imageFile != null
+            ? Image.file(_imageFile!, fit: BoxFit.cover)
+            : imageUrl.isNotEmpty
+              ? Image.network(
+                  imageUrl,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                      ),
+                    );
+                  },
+                )
+              : Image.asset('assets/images/profile_pic.png'),
+        ),
     ),
     Positioned(
       bottom: 0,

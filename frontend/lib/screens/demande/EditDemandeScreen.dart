@@ -18,7 +18,7 @@ class _EditDemandeScreenState extends State<EditDemandeScreen> {
   late TextEditingController _descriptionController;
 
   @override
-  void  initState (){
+  void  initState(){
     super.initState;
     _descriptionController =
         TextEditingController(text: widget.demande['description']);
@@ -56,6 +56,7 @@ class _EditDemandeScreenState extends State<EditDemandeScreen> {
                 decoration: InputDecoration(
                   labelText: 'Description',
                 ),
+                
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Veuillez entrer une description';
@@ -63,6 +64,7 @@ class _EditDemandeScreenState extends State<EditDemandeScreen> {
                   return null;
                 },
               ),
+        
               const SizedBox(height: 16.0),
               ElevatedButton(
                                style: ElevatedButton.styleFrom(
@@ -74,7 +76,9 @@ class _EditDemandeScreenState extends State<EditDemandeScreen> {
       id: widget.demande.id,
       description: _descriptionController.text,
           userId: widget.demande['userId'],
-              userName: widget.demande['userName'],
+              userName: widget.demande['userName'], 
+              userEmail: widget.demande['userEmail'],
+              
     );
 
     FirebaseFirestore.instance

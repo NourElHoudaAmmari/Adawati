@@ -27,7 +27,7 @@ CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
    late Future<QuerySnapshot> demande;
    late Stream<QuerySnapshot> _stream;
    @override
-  void initState() {
+  void  initState () {
     super.initState;
      _stream = _demande.where('userId', isEqualTo: userId).snapshots();
   }
@@ -171,7 +171,7 @@ children: [
           }
         },
         icon: Icons.edit_note,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
       ),
                                 ],
                                      ),
@@ -195,7 +195,7 @@ children: [
               },
             ),
             TextButton(
-              child: Text('Oui'),
+              child: Text('Oui' , style: TextStyle(color: Colors.red),),
               onPressed: () {
                 DemandeController().delete_demande(DemandeModel(id: records.id));
                 Navigator.of(context).pop();
