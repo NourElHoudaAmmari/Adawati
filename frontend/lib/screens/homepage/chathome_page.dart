@@ -22,8 +22,8 @@ bool _isSearching = false;
 @override
 void initState(){
   super.initState();
-  APIs.getSelfInfo();
-  APIs.getFirebaseMessagingToken();
+  //APIs.getSelfInfo();
+ // APIs.getFirebaseMessagingToken();
     APIs.updateActiveStatus(true);
   SystemChannels.lifecycle.setMessageHandler((message){
     if(APIs.auth.currentUser!=null){

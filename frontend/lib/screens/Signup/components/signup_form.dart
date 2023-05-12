@@ -61,7 +61,7 @@ Future<void> addUserDetails(String name, String email, String phone, String pass
       'phone': phone,
       'password': password,
       'profilePick': profilePick,
-      'id': auth.currentUser!.uid,
+      'id': id,
       'isBlocked': isBlocked,
       'lastActive': time,
        'pushToken': pushToken,

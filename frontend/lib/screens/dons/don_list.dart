@@ -210,7 +210,11 @@ children: [
             return Center(
                 child: Text('Some error occurred ${snapshot.error}'));
           }
-            
+                     if (snapshot.data.size == 0) {
+            return Center(
+              child: Text('Aucun élément enregistré dans la liste des demandes.'),
+            );
+          }
           //Check if data arrived
           if (snapshot.hasData) {
             //get the data
@@ -328,13 +332,17 @@ children: [
               ],
             ),
           );
+          
         },
+        
       );
+      
     }
 
     // Show loader if data is not yet available
     return Center(child: CircularProgressIndicator());
   },
+  
   
 ),
 /*floatingActionButton: FloatingActionButton(
