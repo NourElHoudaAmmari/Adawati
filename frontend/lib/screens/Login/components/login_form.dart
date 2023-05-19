@@ -25,6 +25,10 @@ class _LoginFormState extends State<LoginForm>{
 TextEditingController emailController = TextEditingController();
  TextEditingController passwordController =TextEditingController();
     bool _isNotValidate = false;
+    int loginAttempts =0;
+    bool isBlocked = false;
+    Timer? timer;
+     bool isLoginButtonDisabled = false;
     Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -66,8 +70,63 @@ void init() {
   void dispose(){
     emailController.dispose();
     passwordController.dispose();
+    timer?.cancel();
     super.dispose(); 
   }
+  void loginUser() {
+    // Check if the user is blocked
+    if (isBlocked) {
+      Fluttertoast.showToast(
+        msg: "Vous avez été bloqué. Veuillez réessayer dans 20 secondes.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    // Perform the login action
+    setState(() {
+      isLoginButtonDisabled = true; // Disable the login button
+    });
+
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
+    )
+        .then((value) async {
+      isLoggedIn = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', isLoggedIn);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+    }).catchError((error) {
+      Fluttertoast.showToast(
+        msg: "Les informations d'identification sont invalides.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      print("Error ${error.toString()}");
+
+      // Increment the login attempts
+      loginAttempts++;
+
+      // Check if the maximum number of attempts is reached
+      if (loginAttempts >= 3) {
+        // Block the user for 20 seconds
+        blockUser();
+      }
+
+      setState(() {
+        isLoginButtonDisabled = false; // Enable the login button
+      });
+    });
+  }
+
+
  /* final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
  final AuthService authService = AuthService();
@@ -143,27 +202,7 @@ void init() {
           Hero(
             tag: "login_btn",
             child: ElevatedButton (
-              onPressed: (){
-FirebaseAuth.instance.signInWithEmailAndPassword(
-  email: emailController.text,
-   password: passwordController.text).then((value)async{
-    isLoggedIn = true;
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('isLoggedIn', isLoggedIn);
-    Navigator.push(context, 
-    MaterialPageRoute(builder: (context)=>HomePage()));
-   }).onError((error, stackTrace) {
-    Fluttertoast.showToast(
-  msg: "les informations d'identification invalides",
-  toastLength: Toast.LENGTH_SHORT,
-  gravity: ToastGravity.BOTTOM,
-  backgroundColor: Colors.red,
-  textColor: Colors.white,
-);
-    print("Error ${error.toString()}");
-   });
-   
-              },
+              onPressed: isLoginButtonDisabled ? null : loginUser,
               // loginUser,      
               style:ButtonStyle(
 backgroundColor: MaterialStateProperty.all(kontColor),
@@ -234,6 +273,32 @@ backgroundColor: MaterialStateProperty.all(kontColor),
         ],
       ),
     );
+  }
+  
+  void blockUser() {
+     setState(() {
+      isBlocked = true;
+        isLoginButtonDisabled = true;
+    });
+
+    // Show the countdown message
+    Fluttertoast.showToast(
+      msg: "Trop de tentatives de connexion échouées.Veuillez réessayer dans 20 secondes.",
+        toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+
+    // Start the timer for unblocking the user after 20 seconds
+    timer = Timer(Duration(seconds: 20), () {
+      setState(() {
+        isBlocked = false;
+        loginAttempts = 0;
+        isLoginButtonDisabled =false;
+        timer = null;
+      });
+    });
   }
  
 }

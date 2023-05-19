@@ -38,17 +38,17 @@ class MyDateUtil{
       case 1:
       return 'Jan';
       case 2:
-      return 'Feb';
+      return 'Fev';
     case 3:
-    return 'Mar';
+    return 'Mars';
     case 4:
-    return 'Apr';
+    return 'Avril';
     case 5:
-    return 'May';
+    return 'Mai';
     case 6:
     return 'Jun';
     case 7:
-    return 'Jul';
+    return 'Juil';
     case 8:
     return 'Aout';
     case 9:
