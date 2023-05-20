@@ -20,8 +20,8 @@ List<UserModel> list=[];
 final List<UserModel> _searchList = [];
 bool _isSearching = false;
 @override
-void initState(){
-  super.initState();
+void get initState{
+  super.initState;
   //APIs.getSelfInfo();
  // APIs.getFirebaseMessagingToken();
     APIs.updateActiveStatus(true);

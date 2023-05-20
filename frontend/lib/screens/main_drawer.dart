@@ -26,8 +26,8 @@ class _MainDrawerState extends State<MainDrawer> {
        String imageUrl = '';
  File? _imageFile;
        @override
-  void  initState () {
-    super.initState;
+void get initState{
+  super.initState;
     getUserData();
   }
 

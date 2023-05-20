@@ -32,9 +32,8 @@ class _EditDonState extends State<EditDon> {
   String selectedEtat = "";
 
   @override
-  void  initState() {
-    
-    super.initState;
+ void get initState{
+  super.initState;
     data = widget.data;
     _imageURL = data['image'];
     selectedCategorie= widget.data['categorie'];

@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> {
   late String _searchCategory = ''; // Added variable to store search category
   late String _searchTitle = '';
   @override
-  void  initState(){
-    super.initState;
+void get initState{
+  super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _reference.snapshots();
     

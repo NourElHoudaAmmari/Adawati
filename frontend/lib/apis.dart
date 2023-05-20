@@ -21,7 +21,7 @@ static User get user =>auth.currentUser!;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   static Future<bool> userExists() async {
-    return(await firestore.collection('users').doc(auth.currentUser!.uid).get()).exists;
+    return(await firestore.collection('users').doc(user.uid).get()).exists;
   }
 
   static Stream<QuerySnapshot<Map<String,dynamic>>>getAllUsers(){
@@ -34,15 +34,15 @@ static User get user =>auth.currentUser!;
 :'${id}_${user.uid}';
 
     static Stream<QuerySnapshot<Map<String,dynamic>>>getMessages(UserModel user){
-    return firestore.collection('chats/${getConversationID(user.id)}/messages/')
+    return firestore.collection('chats/${getConversationID(user.id!)}/messages/')
     .orderBy('sent',descending: true)
     .snapshots();
   }
 
   static Future<void>sendMessage(UserModel userChat,String msg, Type type)async{
     final time = DateTime.now().millisecondsSinceEpoch.toString();
-    final Message message = Message(toId: userChat.id,msg: msg,read: '',type: type,fromId: user.uid,sent: time);
-    final ref = firestore.collection('chats/${getConversationID(userChat.id)}/messages/');
+    final Message message = Message(toId: userChat.id!,msg: msg,read: '',type: type,fromId: user.uid,sent: time);
+    final ref = firestore.collection('chats/${getConversationID(userChat.id!)}/messages/');
 await ref.doc(time).set(message.toJson()).then((value) => sendPushNotification(userChat,type == Type.text ? msg:'image'));
   }
 
@@ -51,8 +51,11 @@ await ref.doc(time).set(message.toJson()).then((value) => sendPushNotification(u
     .update({'read':DateTime.now().millisecondsSinceEpoch.toString()});
 
   }
+
+   
+   
   static Stream<QuerySnapshot> getLastMessage(UserModel user){
-    return firestore.collection('chats/${getConversationID(user.id)}/messages/')
+    return firestore.collection('chats/${getConversationID(user.id!)}/messages/')
     .orderBy('sent',descending: true)
     .limit(1)
     .snapshots();
@@ -60,7 +63,7 @@ await ref.doc(time).set(message.toJson()).then((value) => sendPushNotification(u
 
   static Future<void> sendChatImage(UserModel userChat, File file)async{
     final ext = file.path.split('.').last;
-    final ref = storage.ref().child('images/${getConversationID(userChat.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+    final ref = storage.ref().child('images/${getConversationID(userChat.id!)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
 
     await ref.putFile(file, SettableMetadata(contentType: 'image/$ext'))
     .then((p0){
@@ -130,9 +133,9 @@ log('Response body: ${res.body}');
     log('\nsendPushNotificationE:$e');
    }
   }
-  
-  static  createUser() {
+  static  createUser() async{
     SignUpForm();
+    return(await firestore.collection('users').doc(user.uid).get());
   }
 
 

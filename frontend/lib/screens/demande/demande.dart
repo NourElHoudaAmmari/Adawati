@@ -32,8 +32,8 @@ class _DemandeState extends State<Demande> {
 
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
-  void initState(){
-     super.initState;
+ void get initState{
+  super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _demande.snapshots();
   }

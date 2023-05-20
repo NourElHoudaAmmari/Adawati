@@ -22,8 +22,8 @@ getCurrentUser(){
   }
 }
   @override
-  void  initState(){
-    super.initState;
+ void get initState{
+  super.initState;
     getCurrentUser();
   }
      

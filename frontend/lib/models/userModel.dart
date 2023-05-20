@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class UserModel{
-final String id;
+final String? id;
 final String name;
 final String email;
 final String phone;
@@ -17,7 +18,7 @@ late String pushToken;
      
 
   UserModel({
-    required this.id,
+    this.id,
    
    required  this.name,
      required this.email, 
@@ -32,6 +33,8 @@ late String pushToken;
   
     
      });
+     
+       
 
 toJson(){
   return {
@@ -42,7 +45,7 @@ toJson(){
     "password":password,
       "profilePick":profilePick,
        "isBlocked":isBlocked,
-              "id":id,
+      
               "isOnline":isOnline,
               "lastActive":lastActive,
               "pushToken":pushToken,
@@ -54,7 +57,7 @@ toJson(){
 factory UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
   final data = document.data()!;
   return UserModel(
-    id:document.id,
+     id:document.id,
     email:data["email"],
     password: data["password"],
     name: data["name"],

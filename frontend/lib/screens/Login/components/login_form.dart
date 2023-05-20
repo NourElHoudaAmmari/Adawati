@@ -8,12 +8,7 @@ import '../../../components/already_have_an_account_acheck.dart';
 import '../../../helpers/constants.dart';
 import '../../Signup/signup_screen.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
-import 'package:snippet_coder_utils/FormHelper.dart';
-import 'package:adawati/services/api_service.dart';
 import'package:adawati/screens/forgot_password.dart';
 
 class LoginForm extends StatefulWidget {

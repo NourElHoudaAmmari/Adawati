@@ -1,4 +1,5 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:adawati/models/register_request_model.dart';
 import 'package:adawati/repository/user_repository.dart';
 import 'package:adawati/screens/Signup/components/or_divider.dart';
@@ -37,14 +38,14 @@ class _SignUpFormState extends State<SignUpForm>{
     phoneController.dispose();
     super.dispose();
   }
-Future<void> addUserDetails(String name, String email, String phone, String password, String profilePick, String id, bool isBlocked, String lastActive, String pushToken, bool isOnline) async {
+Future<void> addUserDetails(String name, String email, String phone, String password, String profilePick,  bool isBlocked, String lastActive, String pushToken, bool isOnline) async {
   final time = DateTime.now().microsecondsSinceEpoch.toString();
   final snapshot = await FirebaseFirestore.instance
       .collection('users')
       .where('email', isEqualTo: email)
       .limit(1)
       .get();
-
+FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid);
   if (snapshot.docs.isNotEmpty) {
     Fluttertoast.showToast(
       msg: "un compte existe déjà pour cet e-mail",
@@ -55,15 +56,13 @@ Future<void> addUserDetails(String name, String email, String phone, String pass
     );
     throw Exception("Cet e-mail est déjà enregistré, veuillez en utiliser un autre.");
   } else {
-    // enregistrer les détails de l'utilisateur
-   // usersCollectionRef.doc(userUid).set({
-    await FirebaseFirestore.instance.collection('users').add({
+    await FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid).set({
       'name': name,
       'email': email,
       'phone': phone,
       'password': password,
       'profilePick': profilePick,
-      'id':id,
+      'id': auth.currentUser!.uid,
       'isBlocked': isBlocked,
       'lastActive': time,
        'pushToken': pushToken,
@@ -72,7 +71,8 @@ Future<void> addUserDetails(String name, String email, String phone, String pass
     });
   }
 }
-   String id = "";
+   String uid = "";
+   //String id = "";
     String name = "";
     String email = "";
     String phoneNumber="";
@@ -247,7 +247,18 @@ controller: passwordController,
                 email: emailController.text,
                  password: passwordController.text,
                  //name :nameController.text
-                 ).then((value) {
+                 ).then((UserCredential userCredential) {
+                  String uid = userCredential.user!.uid;
+                  addUserDetails( nameController.text.trim(),
+                 emailController.text.trim(),
+                phoneController.text.trim(),
+                 passwordController.text.trim(),
+                 profilePickController.text.trim(),
+                 isBlocked,
+                 lastActiveController.text.trim(),
+                 pushTokenController.text.trim(),
+                 isOnline,
+                    );
                   Fluttertoast.showToast(
   msg: "Compte créer avec succés",
   toastLength: Toast.LENGTH_SHORT,
@@ -274,7 +285,6 @@ MaterialPageRoute(builder: (context)=>LoginScreen()));
                 phoneController.text.trim(),
                  passwordController.text.trim(),
                  profilePickController.text.trim(),
-                 idController.text.trim(),
                  isBlocked,
                  lastActiveController.text.trim(),
                  pushTokenController.text.trim(),

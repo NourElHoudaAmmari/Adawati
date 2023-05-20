@@ -55,7 +55,7 @@ class _AddEditDemandeState extends State<AddEditDemande> {
   final TextEditingController nameController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
   @override
- void   initState (){
+void get initState{
   super.initState;
   if(widget.index != null){
     isedit = true;
