@@ -127,17 +127,19 @@ return Row(
             Navigator.pop(context);
           }, 
           icon: Icon(Icons.arrow_back,color: Colors.black54,)),
-          ClipRRect(
-              borderRadius:BorderRadius.circular(20),
-              child:  CircleAvatar(child: Icon(CupertinoIcons.person),),
-             /* child: CachedNetworkImage(
-                height: 0.5,
-                width: 0.5,
-                imageUrl: list.isNotEmpty ? list[0].profilePick : widget.user.profilePick,
-                   // placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>  CircleAvatar(child: Icon(CupertinoIcons.person),),
-                 ),*/
-            ),
+ ClipRRect(
+  borderRadius: BorderRadius.circular(20),
+  child: CircleAvatar(
+    backgroundImage: widget.user.profilePick.isNotEmpty
+        ? CachedNetworkImageProvider(widget.user.profilePick)
+        : null,
+    child: widget.user.profilePick.isNotEmpty
+        ? null
+        : Icon(CupertinoIcons.person),
+  ),
+),
+
+
             SizedBox(width: 10,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -137,8 +137,6 @@ log('Response body: ${res.body}');
     SignUpForm();
     return(await firestore.collection('users').doc(user.uid).get());
   }
-
-
   static Future<void> deleteMessage(Message message)async{
     await firestore.collection('chats/${getConversationID(message.toId)}/messages/')
     .doc(message.sent)
