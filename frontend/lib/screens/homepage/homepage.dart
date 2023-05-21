@@ -12,6 +12,8 @@ import 'package:adawati/screens/main_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../models/userModel.dart';
 import '../demande/demande.dart';
 
 //import '../dons/don_details.dart';
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   bool _isSearching = false; // Added flag to track searching status
   late String _searchCategory = ''; // Added variable to store search category
   late String _searchTitle = '';
+  bool _isBlocked = false;
   @override
   void  initState(){
     super.initState;
@@ -43,12 +46,31 @@ class _HomePageState extends State<HomePage> {
     _stream = _reference.snapshots();
     
     _stream = _reference.orderBy('createdAt', descending: true).snapshots();
+      fetchBlockedStatus();
+  }
+  Future<void> fetchBlockedStatus() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userSnapshot.exists) {
+        setState(() {
+          _isBlocked = userSnapshot.get('isBlocked') ?? false;
+        });
+      }
+    }
   }
 final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    
     final user = FirebaseAuth.instance.currentUser!;
     List<String> docIDs = [];
+   
     Future getDocId()async{
       await FirebaseFirestore.instance.collection('users').get().then(
         (snapshot) =>snapshot.docs.forEach((document) {
@@ -95,26 +117,51 @@ children: [
    ),
    IconButton(
     onPressed: (){
+         if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+  "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
          Navigator.push(context,
     MaterialPageRoute(builder: (context) => Favoirs()),
       );
+    }
     },
     icon: const Icon(Icons.favorite_border_outlined),
     ),
     const SizedBox(width: 24),
      IconButton(
       onPressed: (){
+           if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+"cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
            Navigator.push(context,
     MaterialPageRoute(builder: (context) => ChatHomePage()),
       );
+      }
       },
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
+        
+      
       Navigator.push(context,
     MaterialPageRoute(builder: (context) => ProfileScreen()),
       );
-      
      },
     icon: const Icon(Icons.person),
     ),
@@ -351,6 +398,19 @@ children: [
     );
   }
 void _onButtomPressed(){
+     if (_isBlocked) {
+      // Show a message or perform an action to notify the user that they are blocked.
+      // For example, show a snackbar with an error message.
+      final snackBar = SnackBar(
+  content: Text(
+    'Vous ne pouvez pas ajouter de dons ou de demandes.',
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }
       showModalBottomSheet(
      
         context: context, 
@@ -401,6 +461,7 @@ title: Text('Ajouter un don',style: TextStyle(fontSize: 19,fontStyle: FontStyle.
           ],
         );
       }
+      
 }
 
 

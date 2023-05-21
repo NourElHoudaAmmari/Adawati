@@ -23,6 +23,7 @@ class DonDetails extends StatefulWidget {
       WhishListService _service = WhishListService();
  }
    String? itemId;
+  
    
   late DocumentReference _reference;
   late Future<DocumentSnapshot> _futureData;
@@ -32,6 +33,7 @@ class DonDetails extends StatefulWidget {
 }
 
 class _DonDetailsState extends State<DonDetails> {
+   bool _isBlocked = false;
     final auth = FirebaseAuth.instance;
    //final _authRepo = Get.put(AuthentificationRepository());
   //final _userRepo = Get.put(UserRepository());
@@ -49,7 +51,24 @@ bool _isLiked = false;
   getFavourites();
   
     getCurrentUser();
+         fetchBlockedStatus();
  }
+ Future<void> fetchBlockedStatus() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userSnapshot.exists) {
+        setState(() {
+          _isBlocked = userSnapshot.get('isBlocked') ?? false;
+        });
+      }
+    }
+  }
  getCurrentUser(){
   final user = FirebaseAuth.instance.currentUser;
   if(user !=null){
@@ -366,6 +385,17 @@ Row(
           Padding(padding: EdgeInsets.only(left: 30)),
           InkWell(
             onTap: ()async {
+                if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+"cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
 final Uri url=Uri(scheme: 'tel',
 path:'${data['phone']}' );
 if(await canLaunchUrl(url)){
@@ -373,6 +403,7 @@ if(await canLaunchUrl(url)){
 }else{
   print('cannot launch this url');
 }
+    }
   },
             child: IconoMenu(
               icon: Icons.call,
@@ -384,9 +415,21 @@ if(await canLaunchUrl(url)){
       SizedBox(width: 15),
       InkWell(
         onTap: () {
+            if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+"cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
              Navigator.push(context,
     MaterialPageRoute(builder: (context) => ChatHomePage()),
   );
+    }
         },
         child: IconoMenu(
 

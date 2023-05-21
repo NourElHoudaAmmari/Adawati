@@ -26,12 +26,29 @@ CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
    final userId = FirebaseAuth.instance.currentUser!.uid;
    late Future<QuerySnapshot> demande;
    late Stream<QuerySnapshot> _stream;
+   bool _isBlocked = false;
    @override
   void  initState () {
     super.initState;
      _stream = _demande.where('userId', isEqualTo: userId).snapshots();
+       fetchBlockedStatus();
   }
+Future<void> fetchBlockedStatus() async {
+    User? user = FirebaseAuth.instance.currentUser;
 
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userSnapshot.exists) {
+        setState(() {
+          _isBlocked = userSnapshot.get('isBlocked') ?? false;
+        });
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,25 +81,61 @@ children: [
    ),
    IconButton(
     onPressed: (){
+       if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+  "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
             Navigator.push(context,
     MaterialPageRoute(builder: (context) => Favoirs()),
   );
+    }
     },
     icon: const Icon(Icons.favorite_border_outlined),
     ),
     const SizedBox(width: 24),
      IconButton(
       onPressed: (){
+         if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+  "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
               Navigator.push(context,
     MaterialPageRoute(builder: (context) => ChatHomePage()),
   );
+    }
       },
     icon: const Icon(Icons.chat),
     ),
      IconButton(onPressed: (){
+       if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+    "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
       Navigator.push(context,
     MaterialPageRoute(builder: (context) => ProfileScreen()),
   );
+    }
      },
     icon: const Icon(Icons.person),
     ),

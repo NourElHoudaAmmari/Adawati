@@ -15,7 +15,7 @@ final String lastActive;
 late String pushToken;
 
      
-
+ static UserModel? currentUser;
   UserModel({
     required this.id,
    

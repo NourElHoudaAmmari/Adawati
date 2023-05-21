@@ -6,6 +6,7 @@ import 'package:adawati/screens/homepage/chathome_page.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
 import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -19,13 +20,31 @@ class Favoirs extends StatefulWidget {
 }
 
 class _FavoirsState extends State<Favoirs> {
+    bool _isBlocked = false;
     late WhishListService _service;
      @override
  void  initState(){
    super.initState;
     _service = WhishListService();
+      fetchBlockedStatus();
  
  }
+ Future<void> fetchBlockedStatus() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userSnapshot.exists) {
+        setState(() {
+          _isBlocked = userSnapshot.get('isBlocked') ?? false;
+        });
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,18 +77,42 @@ children: [
    ),
    IconButton(
     onPressed: (){
+       if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+  "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
           Navigator.push(context,
     MaterialPageRoute(builder: (context) => Favoirs()),
   );
+    }
     },
     icon: const Icon(Icons.favorite_border_outlined),
     ),
     const SizedBox(width: 24),
      IconButton(
       onPressed: (){
+         if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+  "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
                  Navigator.push(context,
     MaterialPageRoute(builder: (context) => ChatHomePage()),
   );
+    }
       },
     icon: const Icon(Icons.chat),
     ),
@@ -231,6 +274,19 @@ children: [
   }
 
    void _onButtomPressed(){
+       if (_isBlocked) {
+      // Show a message or perform an action to notify the user that they are blocked.
+      // For example, show a snackbar with an error message.
+      final snackBar = SnackBar(
+  content: Text(
+    'Vous ne pouvez pas ajouter de dons ou de demandes.',
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }
       showModalBottomSheet(
      
         context: context, 

@@ -25,18 +25,49 @@ class Demande extends StatefulWidget {
   @override
   State<Demande> createState() => _DemandeState();
 }
-
+Future<void> _refresh(){
+  return Future.delayed(Duration(seconds: 2));
+}
 class _DemandeState extends State<Demande> {
   late Stream<QuerySnapshot> _stream;
  final CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
-
+  bool _isBlocked = false;
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   void initState(){
      super.initState;
-    //Create stream to listen to the 'items' collection
-    _stream = _demande.snapshots();
+    _stream = _demande.orderBy('createdAt', descending: true).snapshots();
+      fetchBlockedStatus();
   }
+   Future<void> fetchBlockedStatus() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userSnapshot.exists) {
+        setState(() {
+          _isBlocked = userSnapshot.get('isBlocked') ?? false;
+        });
+      }
+    }
+  }
+  void searchRequests(String query) {
+  FirebaseFirestore.instance
+    .collection('demandes')
+    .where('description', isEqualTo: query)
+    .get()
+    .then((QuerySnapshot snapshot) {
+      // Traitez les résultats de la recherche ici
+      // Mettez à jour votre état de widget avec les résultats obtenus
+    })
+    .catchError((error) {
+      // Gérez les erreurs de recherche ici
+    });
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,18 +99,42 @@ children: [
    ),
    IconButton(
     onPressed: (){
+         if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+  "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
          Navigator.push(context,
     MaterialPageRoute(builder: (context) => Favoirs()),
       );
+    }
     },
     icon: const Icon(Icons.favorite_border_outlined),
     ),
     const SizedBox(width: 24),
      IconButton(
       onPressed: (){
+           if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+  "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
     Navigator.push(context,
     MaterialPageRoute(builder: (context) => ChatHomePage()),
   );
+    }
       },
     icon: const Icon(Icons.chat),
     ),
@@ -135,14 +190,14 @@ children: [
   Expanded(
   child: TextField(
    // controller: _searchController,
-    onChanged: (value) {
+   /* onChanged: (value) {
       setState(() {
         _stream = _demande
         .where('description', isEqualTo: value)
         .snapshots();
        //_stream = _reference.where('title', isEqualTo: value).snapshots();
       });
-    },
+    },*/
     decoration: InputDecoration(
       hintText: 'Rechercher',
       prefixIcon: Icon(Icons.search),
@@ -153,6 +208,9 @@ children: [
       
     ),
     cursorColor: Colors.grey,
+     onChanged: (query) {
+    searchRequests(query); 
+  },
     
   ),
 ),
@@ -204,41 +262,44 @@ children: [
                     );
                   }
                   if (snapshots.hasData) {
-                    return ListView.builder(
-                    itemCount: snapshots.data!.docs.length,
-                       itemBuilder: (context, index) {
-                       final DocumentSnapshot records = snapshots.data!.docs[index];
-                       return Padding(
-                         padding: const EdgeInsets.all(8),
-                         child: Slidable(
-                                child: SizedBox(
-                                   height: 90, 
-                 child: Card(
-  child: ListTile(
-    tileColor: Colors.lightBlue[50],
-    title: Text(records["description"]),
-    subtitle: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8), // Ajouter un espacement de 8 pixels
-        Text(records["userName"]),
-        const SizedBox(height: 4), // Ajouter un espacement de 4 pixels
-        Text(records["userEmail"]),
-      ],
-    ),
-    trailing: Text(
-      DateFormat('dd-MM-yyyy').format(records['createdAt'].toDate()),
-      style: TextStyle(color: Colors.deepOrange[800]),
-    ),
-  ),
-),
-               ),
-                                    
-                                    
-                                      ),
-                       );
-                                      },
-                                              );
+                    return RefreshIndicator(
+                       onRefresh: _refresh,
+                      child: ListView.builder(
+                      itemCount: snapshots.data!.docs.length,
+                         itemBuilder: (context, index) {
+                         final DocumentSnapshot records = snapshots.data!.docs[index];
+                         return Padding(
+                           padding: const EdgeInsets.all(8),
+                           child: Slidable(
+                                  child: SizedBox(
+                                     height: 110, 
+                                     child: Card(
+                      child: ListTile(
+                        tileColor: Colors.lightBlue[50],
+                        title: Text(records["description"]),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 8), // Ajouter un espacement de 8 pixels
+                            Text(records["userName"]),
+                            const SizedBox(height: 4), // Ajouter un espacement de 4 pixels
+                            Text(records["userEmail"]),
+                          ],
+                        ),
+                        trailing: Text(
+                          DateFormat('dd-MM-yyyy').format(records['createdAt'].toDate()),
+                          style: TextStyle(color: Colors.deepOrange[800]),
+                        ),
+                      ),
+                    ),
+                                   ),
+                                      
+                                      
+                                        ),
+                         );
+                                        },
+                                                ),
+                    );
                                         } else {
                     return Center(
                       child: CircularProgressIndicator(color: Colors.red),
@@ -254,6 +315,19 @@ children: [
         );
   }
 void _onButtomPressed(){
+    if (_isBlocked) {
+      // Show a message or perform an action to notify the user that they are blocked.
+      // For example, show a snackbar with an error message.
+      final snackBar = SnackBar(
+  content: Text(
+    'Vous ne pouvez pas ajouter de dons ou de demandes.',
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }
       showModalBottomSheet(
      
         context: context, 

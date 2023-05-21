@@ -5,6 +5,8 @@ import 'package:adawati/screens/demande/demande_screen.dart';
 import 'package:adawati/models/userModel.dart';
 import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
@@ -25,12 +27,29 @@ class _MainDrawerState extends State<MainDrawer> {
      String email ='';
        String imageUrl = '';
  File? _imageFile;
+ bool _isBlocked = false;
        @override
   void  initState () {
     super.initState;
     getUserData();
+    fetchBlockedStatus();
   }
+  Future<void> fetchBlockedStatus() async {
+    User? user = FirebaseAuth.instance.currentUser;
 
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userSnapshot.exists) {
+        setState(() {
+          _isBlocked = userSnapshot.get('isBlocked') ?? false;
+        });
+      }
+    }
+  }
   
 void getUserData() async {
     final userEmail = _authRepo.firebaseUser.value?.email;
@@ -142,10 +161,22 @@ ListTile(
     ),
   ),
   onTap: (){
+      if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+    "cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
      Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => DonList()),
             );
+  }
   },
 ),
 ListTile(
@@ -157,10 +188,22 @@ ListTile(
     ),
   ),
   onTap: (){
+      if (_isBlocked) {
+      final snackBar = SnackBar(
+  content: Text(
+"cet utilisateur a été désactivé, veuillez contacter le support pour obtenir de l'aide",
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.red, // Définir la couleur d'arrière-plan comme rouge
+);
+ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }else{
       Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => DemandeScreen()),
             );
+    }
   },
 ),
 ListTile(
