@@ -40,8 +40,8 @@ class _HomePageState extends State<HomePage> {
   late String _searchTitle = '';
   bool _isBlocked = false;
   @override
-  void  initState(){
-    super.initState;
+void initState(){
+  super.initState;
     //Create stream to listen to the 'items' collection
     _stream = _reference.snapshots();
     

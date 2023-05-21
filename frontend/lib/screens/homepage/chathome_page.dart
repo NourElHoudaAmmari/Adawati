@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:adawati/apis.dart';
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/models/userModel.dart';
@@ -20,10 +19,8 @@ List<UserModel> list=[];
 final List<UserModel> _searchList = [];
 bool _isSearching = false;
 @override
-void initState(){
-  super.initState();
-  //APIs.getSelfInfo();
- // APIs.getFirebaseMessagingToken();
+void  initState(){
+  super.initState;
     APIs.updateActiveStatus(true);
   SystemChannels.lifecycle.setMessageHandler((message){
     if(APIs.auth.currentUser!=null){
@@ -96,6 +93,7 @@ return Future.value(message);
               case ConnectionState.done:
               final data = snapshot.data!.docs;
           list = data.map((e) => UserModel.fromSnapshot(e)).toList() ?? [];
+          
           
           if(list.isNotEmpty){
           

@@ -29,8 +29,8 @@ class _MainDrawerState extends State<MainDrawer> {
  File? _imageFile;
  bool _isBlocked = false;
        @override
-  void  initState () {
-    super.initState;
+void initState(){
+  super.initState;
     getUserData();
     fetchBlockedStatus();
   }
@@ -83,28 +83,25 @@ Container(
             bottom: 10,
           ),
             child: ClipRRect(
-          borderRadius: BorderRadius.circular(150),
-          child: _imageFile != null
-            ? Image.file(_imageFile!, fit: BoxFit.cover)
+  borderRadius: BorderRadius.circular(150),
+  child: Container(
+    width: double.infinity,
+    height: double.infinity,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: _imageFile != null
+            ? FileImage(_imageFile!)
             : imageUrl.isNotEmpty
-              ? Image.network(
-                  imageUrl,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                          : null,
-                      ),
-                    );
-                  },
-                )
-              : Image.asset('assets/images/profile_pic.png'),
+                ? NetworkImage(imageUrl)
+                : AssetImage('assets/images/profile_pic.png') as ImageProvider,
+        fit: BoxFit.cover,
+      ),
+    ),
+  ),
+)
+
         ),
-        ),
+    
         Text(  
   name,
    style: TextStyle(

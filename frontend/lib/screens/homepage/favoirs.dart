@@ -24,7 +24,7 @@ class _FavoirsState extends State<Favoirs> {
     late WhishListService _service;
      @override
  void  initState(){
-   super.initState;
+  super.initState;
     _service = WhishListService();
       fetchBlockedStatus();
  

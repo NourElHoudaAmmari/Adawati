@@ -28,8 +28,8 @@ CollectionReference _demande = FirebaseFirestore.instance.collection("demande");
    late Stream<QuerySnapshot> _stream;
    bool _isBlocked = false;
    @override
-  void  initState () {
-    super.initState;
+  void  initState(){
+  super.initState;
      _stream = _demande.where('userId', isEqualTo: userId).snapshots();
        fetchBlockedStatus();
   }

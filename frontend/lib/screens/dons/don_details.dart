@@ -45,8 +45,8 @@ bool _isLiked = false;
   late Map data;
 
  @override
- void  initState(){
-   super.initState;
+void initState(){
+  super.initState;
     _service = WhishListService();
   getFavourites();
   

@@ -18,7 +18,7 @@ class ChatUserCard extends StatefulWidget {
 }
 
 class _ChatUserCardState extends State<ChatUserCard> {
-
+//final UserModel user;
 Message? _message;
   @override
   Widget build(BuildContext context) {
@@ -39,17 +39,17 @@ Message? _message;
            if(list.isNotEmpty) _message = list[0];
 return ListTile(
           leading:ClipRRect(
-            borderRadius:BorderRadius.circular(20),
-            child:  CircleAvatar(child: Icon(CupertinoIcons.person),),
-           /* child: CachedNetworkImage(
-              height: 0.5,
-              width: 0.5,
-              imageUrl: 
-               widget.user.profilePick ?? '',
-                 // placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) =>  CircleAvatar(child: Icon(CupertinoIcons.person),),
-               ),*/
-          ),
+  borderRadius: BorderRadius.circular(20),
+  child: CircleAvatar(
+    backgroundImage: widget.user.profilePick.isNotEmpty
+        ? CachedNetworkImageProvider(widget.user.profilePick)
+        : null,
+    child: widget.user.profilePick.isNotEmpty
+        ? null
+        : Icon(CupertinoIcons.person),
+  ),
+),
+
        
           title: Text(widget.user.name),
           subtitle: Text(_message!=null

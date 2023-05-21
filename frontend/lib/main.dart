@@ -39,10 +39,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  //final AuthService authService = AuthService();
-
- 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context)=>GetMaterialApp(
       debugShowCheckedModeBanner: false,
