@@ -3,6 +3,7 @@ import 'package:adawati/repository/user_repository.dart';
 import 'package:adawati/screens/dons/don_list.dart';
 import 'package:adawati/screens/homepage/chat.dart';
 import 'package:adawati/screens/homepage/chathome_page.dart';
+import 'package:adawati/screens/homepage/notif_page.dart';
 import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -125,7 +126,11 @@ if(fav.contains(_service.user!.uid)){
                 Icons.notifications_none,
                 color: Colors.white,
               ),
-              onPressed: () {}),
+              onPressed: () {
+                              Navigator.push(context,
+    MaterialPageRoute(builder: (context) => NotificationScreen()),
+      );
+              }),
          
         ],
        // actions: [

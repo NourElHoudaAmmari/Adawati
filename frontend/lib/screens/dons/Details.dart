@@ -1,5 +1,6 @@
 import 'package:adawati/providers/dons_provider.dart';
 import 'package:adawati/screens/dons/don_list.dart';
+import 'package:adawati/screens/homepage/notif_page.dart';
 import 'package:adawati/services/whishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,11 @@ class _DonDetailsState extends State<DonDetails> {
                 Icons.notifications_none,
                 color: Colors.white,
               ),
-              onPressed: () {}),
+              onPressed: () {
+                              Navigator.push(context,
+    MaterialPageRoute(builder: (context) => NotificationScreen()),
+      );
+              }),
          
         ],
       ),    

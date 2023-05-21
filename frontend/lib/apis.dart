@@ -16,7 +16,7 @@ class APIs{
 static User get user =>auth.currentUser!;
   static FirebaseAuth auth = FirebaseAuth.instance;
   static late UserModel me;
- 
+ String? mtoken ="";
   static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
 

@@ -1,16 +1,18 @@
+import 'dart:convert';
+
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/screens/dons/don_list.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:core';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
+import 'package:http/http.dart'as http;
 //import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:adawati/repository/user_repository.dart';
@@ -22,6 +24,12 @@ class DonPage extends StatefulWidget {
   State<DonPage> createState() => _DonPageState();
 }
 class _DonPageState extends State<DonPage> {
+  FlutterLocalNotificationsPlugin localNotification=FlutterLocalNotificationsPlugin();
+  Future _showNotification()async{
+    var androidDetails = new AndroidNotificationDetails("channelId", "Local Notification",importance: Importance.high);
+    var generalNotificationDetails =  new NotificationDetails(android: androidDetails);
+    await localNotification.show(0, "Don", "Un nouveau don a été ajouté à Adawati !",generalNotificationDetails);
+  }
   
 List<String> _getUsersToNotify() {
   List<String> usersToNotify = [];
@@ -35,11 +43,6 @@ List<String> _getUsersToNotify() {
 
   return usersToNotify;
 }
-
-
-
-
-  
    final _authRepo = Get.put(AuthentificationRepository());
   final _userRepo = Get.put(UserRepository());
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -56,6 +59,7 @@ List<String> _getUsersToNotify() {
    String selectedCategorie="0";
 bool _isCategorieSelected = false;
 bool _isEtatSelected = false;
+String? mtoken ="";
   String name = '';
      String email ='';
      void getUserData() async {
@@ -88,7 +92,8 @@ bool _isEtatSelected = false;
     final snapshot = await uploadTask;
     return  snapshot.ref.getDownloadURL();
   }
-
+ 
+  
   Future<void> _addDon() async {
 if (_imageFile == null) {
  ScaffoldMessenger.of(context).showSnackBar(
@@ -145,14 +150,20 @@ if (_imageFile == null) {
       style: TextStyle(color: Colors.white),
     ),
   ),
-);   
+);  
+_showNotification(); 
     }
   }
   @override
 void  initState(){
   super.initState;
     getUserData();
-    
+     var androidInitialize = new AndroidInitializationSettings('launcher_icon');
+   // var iOSIntialize = new InitializationSettings();
+    var initialzationSettings = new InitializationSettings(android: androidInitialize);
+    localNotification = new FlutterLocalNotificationsPlugin();
+    localNotification.initialize(initialzationSettings);
+   
    // fetchUserData();
   }
 
@@ -281,9 +292,9 @@ void  initState(){
           );
           for(var categories in categories!){
             categorieItems.add(DropdownMenuItem(
-              value:categories["name"],
+              value:categories["libelle"],
               child:Text(                                                      
-             categories['name'],
+             categories['libelle'],
              
               ),
               
@@ -538,16 +549,15 @@ void  initState(){
         type: StepperType.horizontal,
         currentStep: _activeStepIndex,
         steps: stepList(),
-      onStepContinue: () {
+      onStepContinue: () async {
         final isLastStep = _activeStepIndex == stepList().length -1;
         _formKey.currentState!.validate();
         bool isDetailValid = isDetailComplete();
         if(isDetailValid){
-   if(isLastStep){
+   if(isLastStep) {
     _addDon();
 
           setState(() {
-            
             isCompleted = true;
           });
         }else{

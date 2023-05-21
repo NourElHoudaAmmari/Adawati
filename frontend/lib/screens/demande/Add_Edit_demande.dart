@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_helpers/firebase_helpers.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
@@ -39,6 +40,12 @@ AddEditDemande({this.demande, this.index,});
 }
 
 class _AddEditDemandeState extends State<AddEditDemande> {
+    FlutterLocalNotificationsPlugin localNotification=FlutterLocalNotificationsPlugin();
+  Future _showNotification()async{
+    var androidDetails = new AndroidNotificationDetails("channelId", "Local Notification",importance: Importance.high);
+    var generalNotificationDetails =  new NotificationDetails(android: androidDetails);
+    await localNotification.show(0, "Demande", "Une demande a été ajouté à Adawati !",generalNotificationDetails);
+  }
  final _form_Key = GlobalKey<FormState>();
   bool isedit = false;
   final TextEditingController description = TextEditingController();
@@ -67,6 +74,11 @@ void  initState(){
 
    nameController.text = name;
   emailController.text = email;
+      var androidInitialize = new AndroidInitializationSettings('launcher_icon');
+   // var iOSIntialize = new InitializationSettings();
+    var initialzationSettings = new InitializationSettings(android: androidInitialize);
+    localNotification = new FlutterLocalNotificationsPlugin();
+    localNotification.initialize(initialzationSettings);
   }
     void getUserData() async {
     final user = _authRepo.firebaseUser.value;
@@ -177,6 +189,7 @@ void  initState(){
       duration: Duration(seconds: 2),
       backgroundColor: Colors.green,
     ));
+    _showNotification();
   }
 },
                     child: isedit == true ?  Text("Modifier",style: TextStyle(fontSize: 20)) : Text("Publier",style: TextStyle(fontSize: 20))

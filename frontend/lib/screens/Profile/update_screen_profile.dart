@@ -62,7 +62,7 @@ Future<String> _uploadImageToStorage(File file) async {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
                   },
         icon: const Icon(CupertinoIcons.arrowtriangle_left)),
-     title: Text("Profile", style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic)),
+     title: Text("Modifier Profile", style: TextStyle(color: Colors.white,fontStyle: FontStyle.italic)),
         ),
         body: SingleChildScrollView(
         child: Container(
@@ -84,7 +84,7 @@ if(snapshot.hasData){
     
     child: Column(
                 children: [
-  Stack(
+Stack(
   children: [
     SizedBox(
       width: 120,
@@ -119,8 +119,7 @@ if(snapshot.hasData){
             ),
           );
         },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(150),
+        child: ClipOval(
           child: _imageFile != null
             ? Image.file(_imageFile!, fit: BoxFit.cover)
             : imageUrl.isNotEmpty
@@ -140,6 +139,24 @@ if(snapshot.hasData){
                   },
                 )
               : Image.asset('assets/images/profile_pic.png'),
+        ),
+      ),
+    ),
+    Positioned(
+      bottom: 0,
+      right: 0,
+      child: Container(
+        width: 35,
+        height: 35,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.grey,
+        ),
+        child: IconButton(
+          icon: Icon(Icons.edit, color: Colors.white),
+          onPressed: () {
+            // Handle edit button pressed
+          },
         ),
       ),
     ),

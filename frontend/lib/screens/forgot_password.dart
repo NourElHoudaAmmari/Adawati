@@ -1,4 +1,5 @@
 import 'package:adawati/screens/Login/login_screen.dart';
+import 'package:adawati/screens/forg_pass_complete.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,19 +46,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         centerTitle: false,
         title: Text("Mot de passe oublié"),
       ),
+      
       body: SingleChildScrollView(
+        
         child: Container(
           child: Column(
+            
             children: [
+              
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                padding: const EdgeInsets.all(40),
              child: Text('Entrez votre email et nous vous enverrons un lien de réinitialisation de mot de passe',
              textAlign: TextAlign.center,
-             style: TextStyle(fontSize: 18),),
+             style: TextStyle(fontSize: 15,fontStyle: FontStyle.italic),),
               ),
               SizedBox(height: 10,),
               Container(
-                padding:const EdgeInsets.all(defaultPadding),
+                padding:const EdgeInsets.all(20),
                 alignment: Alignment.center,
                 height: 200.0,
                 child:Lottie.asset("assets/forgetpass.json"),
@@ -81,16 +86,29 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 30,
               ),
-              MaterialButton(
-                
-                onPressed:passwordReset,
+  Container(
+  width: 250,
+  height: 50,
+  child: MaterialButton(
+    onPressed: (){
+      passwordReset();
+          Navigator.push(context,
+    MaterialPageRoute(builder: (context) => EmailSent()),
+      );
+    },
+    child: Text("Soumettre",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+    color: kontColor,
+    textColor: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+    ),
+    
+  ),
+  
+),
 
-                child: Text("Soumettre"),
-                
-              color: kontColor,
-                ),
             ],
           ),
         ),

@@ -168,9 +168,9 @@ Future<String> uploadImageToFirebaseStorage(File file) async {
                       );
                       for (var category in categories!) {
                         categorieItems.add(DropdownMenuItem(
-                          value: category["name"],
+                          value: category["libelle"],
                           child: Text(
-                            category['name'],
+                            category['libelle'],
                           ),
                         ));
                       }

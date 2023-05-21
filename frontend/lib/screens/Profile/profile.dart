@@ -58,43 +58,34 @@ void getUserData() async {
           child: Column(
             children: [
         
-              Stack(
+     Stack(
   children: [
     SizedBox(
       width: 120,
       height: 120,
-      child: ClipRRect(
-          borderRadius: BorderRadius.circular(150),
-          child: _imageFile != null
-            ? Image.file(_imageFile!, fit: BoxFit.cover)
-            : imageUrl.isNotEmpty
-              ? Image.network(
-                  imageUrl,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                          : null,
-                      ),
-                    );
-                  },
-                )
-              : Image.asset('assets/images/profile_pic.png'),
-        ),
-    ),
-    Positioned(
-      bottom: 0,
-      right: 0,
-      child: Container(
-        width: 35,
-        height: 35,
-        // decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),color: Colors.grey),
+      child: ClipOval(
+        child: _imageFile != null
+          ? Image.file(_imageFile!, fit: BoxFit.cover)
+          : imageUrl.isNotEmpty
+            ? Image.network(
+                imageUrl,
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                        : null,
+                    ),
+                  );
+                },
+              )
+            : Image.asset('assets/images/profile_pic.png'),
       ),
     ),
+  
   ],
 ),
 

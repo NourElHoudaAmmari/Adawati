@@ -10,6 +10,7 @@ import 'package:adawati/screens/homepage/chat.dart';
 import 'package:adawati/screens/homepage/chathome_page.dart';
 import 'package:adawati/screens/homepage/favoirs.dart';
 import 'package:adawati/screens/homepage/homepage.dart';
+import 'package:adawati/screens/homepage/notif_page.dart';
 import 'package:adawati/screens/main_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -177,7 +178,11 @@ ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 Icons.notifications_none,
                 color: Color.fromARGB(255, 103, 103, 103),
               ),
-              onPressed: () {}),
+              onPressed: () {
+                              Navigator.push(context,
+    MaterialPageRoute(builder: (context) => NotificationScreen()),
+      );
+              }),
         ],
       ),
 

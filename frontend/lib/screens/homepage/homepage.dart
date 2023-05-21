@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sort_child_properties_last, avoid_returning_null_for_void, must_be_immutable, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
 import 'package:adawati/helpers/constants.dart';
 import 'package:adawati/screens/homepage/chathome_page.dart';
+import 'package:adawati/screens/homepage/notif_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:adawati/screens/Profile/profile.dart';
 import 'package:adawati/screens/demande/Add_Edit_demande.dart';
@@ -198,7 +199,11 @@ ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 Icons.notifications_none,
                 color: Color.fromARGB(255, 103, 103, 103),
               ),
-              onPressed: () {}),
+              onPressed: () {
+                     Navigator.push(context,
+    MaterialPageRoute(builder: (context) => NotificationScreen()),
+      );
+              }),
         ],
       ),
 
